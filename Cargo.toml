@@ -1,0 +1,17 @@
+[package]
+name = "nixie"
+version = "1.0.0"
+authors = [ "Jamie Murphy <hello@jamiethalacker.dev" ]
+description = "A clock app"
+edition = "2021"
+
+[dependencies]
+
+[dependencies.gtk]
+package = "gtk4"
+git = "https://github.com/gtk-rs/gtk4-rs"
+version = "0.5"
+
+[dependencies.he]
+package = "libhelium"
+git = "https://github.com/tau-OS/libhelium-rs"
