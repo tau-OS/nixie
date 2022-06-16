@@ -5,6 +5,11 @@
       <object class="HeMiniContentBlock">
         <property name="title">San Francisco, USA</property> 
         <property name="subtitle">Fri, Jun 10 // UTC -8</property>
+        <property name="primary-button">
+          <object class="HeTextButton">
+            <property name="label">2:44:41 AM</property>
+          </object>
+        </property>
       </object>
     </child>
   </template>
