@@ -1,21 +1,16 @@
 use he::prelude::*;
-use he::{Application, ApplicationWindow};
+use he::{Application};
+
+mod ui;
+mod window;
+use crate::window::window::build;
 
 fn main() {
     let app = Application::builder()
-	.application_id("co.tauos.Nixie")
-	.build();
+        .application_id("co.tauos.Nixie")
+        .build();
 
-    app.connect_activate(build_ui);
+    app.connect_activate(build);
 
     app.run();
-}
-
-fn build_ui(app: &Application) {
-    let window = ApplicationWindow::builder()
-	.application(app)
-	.title("Nixie")
-	.build();
-
-    window.present();
 }
