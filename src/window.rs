@@ -15,14 +15,17 @@ pub mod window {
 
         let stack = Stack::new();
 
-        stack.add_titled(&ui::clocks::clocks::build(), None, "Clocks");
+        stack.add_titled(&ui::clocks::ClocksPage::new(), None, "Clocks");
         stack.add_titled(&ui::alarms::alarms::build(), None, "Alarms");
         stack.add_titled(&ui::stopwatch::stopwatch::build(), None, "Stopwatch");
         stack.add_titled(&ui::timer::timer::build(), None, "Timer");
 
+        stack.set_margin_start(12);
+        stack.set_margin_end(12);
+
         let switcher = ViewSwitcher::builder()
             .stack(&stack)
-            .margin_start(6)
+            .margin_start(12)
             .margin_top(6)
             .build();
 
