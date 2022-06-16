@@ -1,9 +1,9 @@
 pub mod window {
     use gtk::{Box, Orientation, Stack};
     use he::prelude::*;
-    use he::{AppBar, Application, ApplicationWindow, ViewSwitcher};
+    use he::{AppBar, ApplicationWindow, ViewSwitcher};
 
-    use crate::ui;
+    use crate::{ui, Application};
 
     pub fn build(app: &Application) {
         let globalbox = Box::new(Orientation::Vertical, 0);
