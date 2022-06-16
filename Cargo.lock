@@ -382,7 +382,7 @@ checksum = "349d5a591cd28b49e1d1037471617a32ddcda5731b99419008085f72d5a53836"
 [[package]]
 name = "libhelium"
 version = "0.1.0"
-source = "git+https://github.com/tau-OS/libhelium-rs#4d38585230299145c24bb9bfa000f32cb91c3bf0"
+source = "git+https://github.com/tau-OS/libhelium-rs#7abf2162fede7c9f3849025f2eb85d379c16675a"
 dependencies = [
  "gdk-pixbuf",
  "gdk4",
@@ -398,7 +398,7 @@ dependencies = [
 [[package]]
 name = "libhelium-sys"
 version = "0.0.1"
-source = "git+https://github.com/tau-OS/libhelium-rs#4d38585230299145c24bb9bfa000f32cb91c3bf0"
+source = "git+https://github.com/tau-OS/libhelium-rs#7abf2162fede7c9f3849025f2eb85d379c16675a"
 dependencies = [
  "gdk4-sys",
  "gio-sys",

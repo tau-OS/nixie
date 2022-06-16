@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="NixieClocksPage" parent="HeContentList">
+    <child>
+      <object class="HeMiniContentBlock">
+        <property name="title">San Francisco, USA</property> 
+        <property name="subtitle">Fri, Jun 10 // UTC -8</property>
+      </object>
+    </child>
+  </template>
+</interface>
