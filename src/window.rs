@@ -15,7 +15,9 @@ pub mod window {
 
         let stack = Stack::new();
 
-        stack.add_titled(&ui::clocks::ClocksPage::new(), None, "Clocks");
+        let clocks = ui::clocks::ClocksPage::new();
+
+        stack.add_titled(&clocks, None, "Clocks");
         stack.add_titled(&ui::alarms::alarms::build(), None, "Alarms");
         stack.add_titled(&ui::stopwatch::stopwatch::build(), None, "Stopwatch");
         stack.add_titled(&ui::timer::timer::build(), None, "Timer");
@@ -32,6 +34,8 @@ pub mod window {
         globalbox.append(&appbar);
         globalbox.append(&switcher);
         globalbox.append(&stack);
+
+        clocks.fill();
 
         let window = ApplicationWindow::builder()
             .application(app)
