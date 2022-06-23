@@ -7,7 +7,7 @@ mod imp {
     use he::{prelude::*, ContentList, OverlayButton};
 
     #[derive(CompositeTemplate, Default)]
-    #[template(file = "clocks.ui")]
+    #[template(resource = "/co/tauos/Nixie/clocks.ui")]
     pub struct ClocksPage {
         #[template_child]
         pub btn: TemplateChild<OverlayButton>,

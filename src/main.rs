@@ -10,7 +10,7 @@ mod window;
 
 mod imp {
     use gtk::{
-        gio::Settings,
+        gio::{Settings, self},
         glib,
         subclass::prelude::{ApplicationImplExt, GtkApplicationImpl, ObjectImpl, ObjectSubclass},
     };
@@ -38,6 +38,9 @@ mod imp {
     impl ObjectImpl for Application {}
     impl ApplicationImpl for Application {
         fn activate(&self, app: &Self::Type) {
+            gio::resources_register_include!("co.tauos.Nixie.gresource")
+                .expect("Failed to register resources");
+
             crate::window::window::build(app);
         }
 

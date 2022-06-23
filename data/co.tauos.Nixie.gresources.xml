@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/co/tauos/Nixie/">
+        <file compressed="true" preprocess="xml-stripblanks" alias="clocks.ui">ui/clocks.ui</file>
+    </gresource>
+</gresources>

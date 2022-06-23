@@ -9,6 +9,9 @@ edition = "2021"
 chrono = "0.4.19"
 chrono-tz = "0.6.1"
 
+[build-dependencies.gio]
+version = "0.15"
+
 [dependencies.gtk]
 package = "gtk4"
 git = "https://github.com/gtk-rs/gtk4-rs"
