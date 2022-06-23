@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="NixieClocksPage" parent="GtkBox">
+    <child>
+      <object class="GtkOverlay">
+        <property name="hexpand">true</property>
+        <child type="overlay">
+          <object class="HeOverlayButton" id="btn">
+            <property name="icon">list-add-symbolic</property>
+            <property name="alignment">right</property>
+            <property name="size">small</property>
+          </object>
+        </child>
+        <child>
+          <object class="HeContentList" id="list"></object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
