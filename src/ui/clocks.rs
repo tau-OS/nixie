@@ -2,9 +2,11 @@ mod imp {
     use gtk::{
         glib::{self, subclass::InitializingObject},
         subclass::prelude::*,
-        CompositeTemplate,
+        CompositeTemplate, TemplateChild, template_callbacks,
     };
     use he::{prelude::*, ContentList, OverlayButton};
+
+    use crate::{ui::dialogs::clock_locations::ClockLocations, window::Window};
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/co/tauos/Nixie/clocks.ui")]
@@ -15,6 +17,15 @@ mod imp {
         pub list: TemplateChild<ContentList>,
     }
 
+    #[template_callbacks]
+    impl ClocksPage {
+        #[template_callback]
+        fn handle_btn_click(_button: &OverlayButton) {
+            let dialog = ClockLocations::new(&Window::default());
+            dialog.present();
+        }
+    }
+
     #[glib::object_subclass]
     impl ObjectSubclass for ClocksPage {
         const NAME: &'static str = "NixieClocksPage";
@@ -23,6 +34,7 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
+            klass.bind_template_callbacks();
         }
 
         fn instance_init(obj: &InitializingObject<Self>) {
@@ -34,6 +46,8 @@ mod imp {
     impl ObjectImpl for ClocksPage {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
+
+            obj.fill();
         }
     }
     impl WidgetImpl for ClocksPage {}
@@ -59,7 +73,7 @@ impl ClocksPage {
         Object::new(&[]).expect("Failed to create ClocksPage")
     }
 
-    pub fn fill(&self) {
+    fn fill(&self) {
         let loc = gweather::Location::new_detached("San Francisco", None, 37.773972, -122.431297);
         let block = generate_row(loc);
 
