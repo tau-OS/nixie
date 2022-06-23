@@ -19,7 +19,7 @@ version = "0.5"
 
 [dependencies.he]
 package = "libhelium"
-git = "https://github.com/tau-OS/libhelium-rs"
+path = "./libhelium-rs"
 
 [dependencies.gweather]
 package = "libgweather"

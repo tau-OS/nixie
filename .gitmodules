@@ -1,0 +1,3 @@
+[submodule "libhelium-rs"]
+	path = libhelium-rs
+	url = git@github.com:ItsJamie9494/libhelium-rs.git

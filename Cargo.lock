@@ -544,7 +544,6 @@ dependencies = [
 [[package]]
 name = "libhelium"
 version = "0.1.0"
-source = "git+https://github.com/tau-OS/libhelium-rs#7abf2162fede7c9f3849025f2eb85d379c16675a"
 dependencies = [
  "gdk-pixbuf",
  "gdk4",
@@ -560,7 +559,6 @@ dependencies = [
 [[package]]
 name = "libhelium-sys"
 version = "0.0.1"
-source = "git+https://github.com/tau-OS/libhelium-rs#7abf2162fede7c9f3849025f2eb85d379c16675a"
 dependencies = [
  "gdk4-sys",
  "gio-sys 0.16.0",
