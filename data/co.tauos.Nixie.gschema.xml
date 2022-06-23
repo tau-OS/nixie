@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
-    <schema id="co.tauos.Nixie" path="/co/tauos/Nixie/"></schema>
+    <schema id="co.tauos.Nixie" path="/co/tauos/Nixie/">
+        <key name="clocks" type="aa{sv}">
+            <default>[]</default>
+            <summary>Configured World Clocks</summary>
+            <description>
+                List of World Clocks
+            </description>
+        </key>
+    </schema>
 </schemalist>
