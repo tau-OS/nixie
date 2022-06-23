@@ -1,48 +1,73 @@
-pub mod window {
-    use gtk::{Box, Orientation, Stack};
-    use he::prelude::*;
-    use he::{AppBar, ApplicationWindow, ViewSwitcher};
+use gtk::{
+    gio::{ActionGroup, ActionMap},
+    glib::{self, Object}, ApplicationWindow, Widget, Root,
+};
 
-    use crate::{ui, Application};
+use crate::Application;
 
-    pub fn build(app: &Application) {
-        let globalbox = Box::new(Orientation::Vertical, 0);
+mod imp {
+    use gtk::{
+        glib::{self, subclass::InitializingObject},
+        subclass::prelude::*,
+        CompositeTemplate,
+    };
+    use he::{prelude::*, subclass::prelude::*, ApplicationWindow};
 
-        let appbar = AppBar::builder()
-            .show_buttons(true)
-            .show_back(false)
-            .build();
+    use crate::ui::clocks::ClocksPage;
 
-        let stack = Stack::new();
+    #[derive(CompositeTemplate)]
+    #[template(resource = "/co/tauos/Nixie/window.ui")]
+    pub struct Window {}
 
-        let clocks = ui::clocks::ClocksPage::new();
+    impl Default for Window {
+        fn default() -> Self {
+            Self {}
+        }
+    }
 
-        stack.add_titled(&clocks, None, "Clocks");
-        stack.add_titled(&ui::alarms::alarms::build(), None, "Alarms");
-        stack.add_titled(&ui::stopwatch::stopwatch::build(), None, "Stopwatch");
-        stack.add_titled(&ui::timer::timer::build(), None, "Timer");
+    #[glib::object_subclass]
+    impl ObjectSubclass for Window {
+        const NAME: &'static str = "NixieWindow";
+        type Type = super::Window;
+        type ParentType = ApplicationWindow;
 
-        stack.set_margin_start(12);
-        stack.set_margin_end(12);
+        fn class_init(klass: &mut Self::Class) {
+            ClocksPage::ensure_type();
 
-        let switcher = ViewSwitcher::builder()
-            .stack(&stack)
-            .margin_start(12)
-            .margin_top(6)
-            .build();
+            klass.bind_template();
+        }
 
-        globalbox.append(&appbar);
-        globalbox.append(&switcher);
-        globalbox.append(&stack);
+        fn instance_init(obj: &InitializingObject<Self>) {
+            obj.init_template();
+        }
+    }
 
-        clocks.fill();
+    impl HeApplicationWindowImpl for Window {}
+    impl ApplicationWindowImpl for Window {}
+    impl WindowImpl for Window {}
+    impl ObjectImpl for Window {
+        fn constructed(&self, obj: &Self::Type) {
+            self.parent_constructed(obj);
+        }
+    }
+    impl WidgetImpl for Window {}
+}
 
-        let window = ApplicationWindow::builder()
-            .application(app)
-            .title("Nixie")
-            .child(&globalbox)
-            .build();
+glib::wrapper! {
+    pub struct Window(ObjectSubclass<imp::Window>)
+        @extends Widget, gtk::Window, ApplicationWindow, he::ApplicationWindow, ActionMap, ActionGroup,
+        @implements Root;
 
-        window.present();
+}
+
+impl Window {
+    pub fn new(app: &Application) -> Self {
+        Object::new(&[("application", app)]).expect("Failed to create Window")
+    }
+}
+
+impl Default for Window {
+    fn default() -> Self {
+        Window::new(&Application::default())
     }
 }

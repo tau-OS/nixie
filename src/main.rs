@@ -4,6 +4,7 @@ use gtk::{
     prelude::*,
     subclass::prelude::*,
 };
+use window::Window;
 
 mod ui;
 mod window;
@@ -14,7 +15,8 @@ mod imp {
         glib,
         subclass::prelude::{ApplicationImplExt, GtkApplicationImpl, ObjectImpl, ObjectSubclass},
     };
-    use he::subclass::{application::HeApplicationImpl, prelude::ApplicationImpl};
+    use he::subclass::prelude::*;
+    use he::prelude::*;
 
     pub struct Application {
         pub settings: Settings,
@@ -41,7 +43,8 @@ mod imp {
             gio::resources_register_include!("co.tauos.Nixie.gresource")
                 .expect("Failed to register resources");
 
-            crate::window::window::build(app);
+            let window = app.create_window();
+            window.present();
         }
 
         fn startup(&self, app: &Self::Type) {
@@ -69,6 +72,10 @@ impl Application {
 
     pub fn settings(&self) -> Settings {
         self.imp().settings.clone()
+    }
+
+    fn create_window(&self) -> Window {
+        Window::new(&self.clone())
     }
 }
 
