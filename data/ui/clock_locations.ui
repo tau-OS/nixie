@@ -8,11 +8,49 @@
     <property name="destroy_with_parent">True</property>
     <child>
       <object class="GtkBox">
+        <property name="orientation">vertical</property>
         <child>
-          <object class="HeAppBar">
+          <object class="HeAppBar" id="bar">
             <property name="flat">true</property>
             <property name="show_back">false</property>
             <property name="show_buttons">true</property>
+            <property name="stack">stack</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSearchBar" id="search">
+            <signal name="notify::search-mode-enabled" handler="on_search_mode_notify" swapped="no" />
+            <property name="search-mode-enabled">true</property>
+            <property name="child">
+              <object class="GtkSearchEntry" id="entry">
+                <signal name="search-changed" handler="on_search_changed" swapped="no" object="NixieClockLocations" />
+              </object>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="stack">
+            <child>
+              <object class="HeEmptyPage" id="empty_search">
+                <property name="icon">edit-find-symbolic</property>
+                <property name="title">Search for a City</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="results">
+                <property name="hscrollbar_policy">never</property>
+                <property name="vexpand">True</property>
+                <child>
+                  <object class="HeContentList" id="listbox">
+                    <property name="valign">start</property>
+                    <property name="margin_top">18</property>
+                    <property name="margin_bottom">18</property>
+                    <property name="margin_start">12</property>
+                    <property name="margin_end">12</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>

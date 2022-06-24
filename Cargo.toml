@@ -8,6 +8,8 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.19"
 chrono-tz = "0.6.1"
+unicode-casefold = "0.2"
+unicode-normalization = "0.1.19"
 
 [build-dependencies.gio]
 version = "0.15"
