@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
     <schema id="co.tauos.Nixie" path="/co/tauos/Nixie/">
-        <key name="clocks" type="aa{sv}">
+        <!-- NOTE: This may break in the future :( -->
+        <key name="clocks" type="a(uv)">
             <default>[]</default>
             <summary>Configured World Clocks</summary>
             <description>

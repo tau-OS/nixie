@@ -58,7 +58,10 @@ use gtk::{
     subclass::prelude::*,
     Accessible, Box, Buildable, ConstraintTarget, Widget,
 };
+use gweather::Location;
 use he::prelude::*;
+
+use crate::application::Application;
 
 use super::clock_row::ClockRow;
 
@@ -74,10 +77,16 @@ impl ClocksPage {
     }
 
     fn fill(&self) {
-        let loc = gweather::Location::new_detached("San Francisco", None, 37.773972, -122.431297);
-        let block = ClockRow::new();
-        block.setup_row(loc);
+        let settings = Application::settings(&Application::default());
 
-        self.imp().list.add(&block);
+        // TODO: Need a way to use "av" as the format string and make this bitch not fucking die
+        // although I could use "as" and convert whatever to a variant, right?
+        for location in settings.value("clocks").iter() {
+            let loc = Location::world().unwrap().deserialize(&location);
+            let block = ClockRow::new();
+            block.setup_row(loc);
+
+            self.imp().list.add(&block);
+        }
     }
 }
