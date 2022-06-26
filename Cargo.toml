@@ -6,13 +6,19 @@ description = "A clock app"
 edition = "2021"
 
 [dependencies]
+
+log = "0.4"
+pretty_env_logger = "0.4"
+gettext-rs = { version = "0.7", features = ["gettext-system"] }
+
 chrono = "0.4.19"
 chrono-tz = "0.6.1"
 unicode-casefold = "0.2"
 unicode-normalization = "0.1.19"
 
-[build-dependencies.gio]
-version = "0.15"
+[build-dependencies]
+owo-colors = "3.4.0"
+gio = "0.15"
 
 [dependencies.gtk]
 package = "gtk4"
