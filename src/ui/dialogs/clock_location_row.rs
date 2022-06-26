@@ -9,12 +9,9 @@ use he::{prelude::*, Bin, MiniContentBlock};
 mod imp {
     use gtk::{glib, subclass::prelude::*};
     use he::{subclass::prelude::*, MiniContentBlock};
-    use gweather::Location;
 
     #[derive(Default)]
-    pub struct ClockLocationRow {
-        pub location: Vec<Location>,
-    }
+    pub struct ClockLocationRow {}
 
     #[glib::object_subclass]
     impl ObjectSubclass for ClockLocationRow {
