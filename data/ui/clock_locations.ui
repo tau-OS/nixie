@@ -23,7 +23,7 @@
             <property name="search-mode-enabled">true</property>
             <property name="child">
               <object class="GtkSearchEntry" id="entry">
-                <signal name="search-changed" handler="on_search_changed" swapped="no" object="NixieClockLocations" />
+                <signal name="search-changed" handler="on_search_changed" swapped="true" />
               </object>
             </property>
           </object>
