@@ -54,14 +54,14 @@ impl ClockLocationRow {
             }
         }
 
-        return Some(top_loc.name().unwrap().to_string());
+        return Some(format!(", {}", top_loc.name().unwrap().to_string()));
     }
 
     pub fn setup_row(&self, loc: Location) {
         let tz: Tz = loc.timezone().unwrap().identifier().parse().unwrap();
 
         self.set_title(&format!(
-            "{}, {}",
+            "{}{}",
             &loc.name().unwrap().to_string(),
             Self::get_state_name(loc.clone()).unwrap_or(String::new())
         ));
