@@ -4,10 +4,10 @@ mod imp {
         glib::{self, subclass::InitializingObject},
         prelude::InitializingWidgetExt,
         subclass::prelude::*,
-        CompositeTemplate, SearchEntry, Stack,
+        CompositeTemplate, ListBox, ScrolledWindow, SearchEntry, Stack,
     };
     use gweather::Location;
-    use he::{prelude::*, subclass::prelude::*, ContentList, MiniContentBlock, Window};
+    use he::{prelude::*, subclass::prelude::*, EmptyPage, MiniContentBlock, Window};
     use unicode_casefold::UnicodeCaseFold;
     use unicode_normalization::UnicodeNormalization;
 
@@ -18,8 +18,14 @@ mod imp {
         pub entry: TemplateChild<SearchEntry>,
         #[template_child]
         pub stack: TemplateChild<Stack>,
+
         #[template_child]
-        pub listbox: TemplateChild<ContentList>,
+        pub empty_search: TemplateChild<EmptyPage>,
+        #[template_child]
+        pub results: TemplateChild<ScrolledWindow>,
+
+        #[template_child]
+        pub listbox: TemplateChild<ListBox>,
 
         pub locations_vec: Vec<gweather::Location>,
     }
@@ -51,15 +57,21 @@ mod imp {
 
         #[template_callback]
         fn on_search_changed(&self) {
-            let mut locations = self.locations_vec.clone();
+            // TODO This should be added to the hella based ContentList
+            let mut fc = self.listbox.first_child();
+            while fc != None {
+                self.listbox.remove(&fc.unwrap());
+                fc = self.listbox.first_child();
+            }
+
+            let mut locations = Vec::new();
             locations.clear();
 
             if self.entry.text() == "" {
-                self.stack.set_visible_child_name("empty_search");
+                self.stack.set_visible_child(&self.empty_search.get());
                 return;
             }
 
-            // TODO normalise
             let search: String = self
                 .entry
                 .text()
@@ -72,10 +84,10 @@ mod imp {
                 return;
             }
 
-            locations = super::ClockLocations::query_locations(locations, &world.unwrap(), search);
+            locations = super::ClockLocations::query_locations(&world.unwrap(), search);
 
             if locations.len() == 0 {
-                self.stack.set_visible_child_name("empty_search");
+                self.stack.set_visible_child(&self.empty_search.get());
                 return;
             }
 
@@ -83,15 +95,15 @@ mod imp {
 
             for loc in locations.iter_mut() {
                 let tz: Tz = loc.timezone().unwrap().identifier().parse().unwrap();
-                self.listbox.add(
+                self.listbox.append(
                     &MiniContentBlock::builder()
-                        .title(&loc.city_name().unwrap().to_string())
-                        .subtitle(&tz.to_string())
+                        .title(&loc.name().unwrap().to_string())
+                        .subtitle(&loc.country_name().unwrap_or(glib::GString::from(tz.to_string())))
                         .build(),
                 )
             }
 
-            self.stack.set_visible_child_name("results");
+            self.stack.set_visible_child(&self.results.get());
         }
     }
 
@@ -128,60 +140,54 @@ impl ClockLocations {
         Object::new(&[("parent", parent)]).expect("Failed to create ClockLocations")
     }
 
-    fn query_locations(
-        locations: Vec<Location>,
-        location: &Location,
-        search: String,
-    ) -> Vec<Location> {
-        if locations.len() >= RESULT_COUNT_LIMIT {
-            return Vec::new();
-        } else {
-            let mut new_loc: Vec<Location> = locations.clone();
+    fn query_locations(location: &Location, search: String) -> Vec<Location> {
+        let mut new_loc: Vec<Location> = Vec::new();
 
-            match &location.clone().level() {
-                LocationLevel::City => {
-                    let contains_query = location.sort_name().unwrap().contains(&search);
+        match &location.clone().level() {
+            LocationLevel::City => {
+                let contains_query = location.sort_name().unwrap().contains(&search);
 
-                    let mut country_name: String = "".to_string();
-                    if location.country_name() != None {
-                        country_name = location
-                            .country_name()
-                            .unwrap()
-                            .to_string()
-                            .nfd()
-                            .case_fold()
-                            .collect::<String>();
-                    }
-
-                    let contains_country = country_name.contains(&search);
-
-                    if contains_query || contains_country {
-                        new_loc.push(location.clone());
-                    }
+                let mut country_name: String = "".to_string();
+                if location.country_name() != None {
+                    country_name = location
+                        .country_name()
+                        .unwrap()
+                        .to_string()
+                        .nfd()
+                        .case_fold()
+                        .collect::<String>();
                 }
-                LocationLevel::NamedTimezone => {
-                    // TODO handle is selected things i have no idea
-                    if location.sort_name().unwrap().contains(&search) {
-                        new_loc.push(location.clone());
-                    }
-                }
-                _ => {}
-            };
 
-            let mut loc = location.next_child(None);
-            while loc.clone() != None {
-                super::clock_locations::ClockLocations::query_locations(
-                    locations.clone(),
+                let contains_country = country_name.contains(&search);
+
+                if contains_query || contains_country {
+                    new_loc.push(location.clone());
+                }
+            }
+            LocationLevel::NamedTimezone => {
+                // TODO handle is selected things i have no idea
+                if location.sort_name().unwrap().contains(&search) {
+                    new_loc.push(location.clone());
+                }
+            }
+            _ => {}
+        };
+
+        let mut loc = location.next_child(None);
+        while loc.clone() != None {
+            new_loc.append(
+                &mut super::clock_locations::ClockLocations::query_locations(
                     &loc.clone().unwrap(),
                     search.clone(),
-                );
-                if locations.len() >= RESULT_COUNT_LIMIT {
-                    return Vec::new();
-                }
-                loc = location.next_child(loc.as_ref());
+                ),
+            );
+            if new_loc.len() >= RESULT_COUNT_LIMIT {
+                return Vec::new();
             }
 
-            return new_loc;
+            loc = location.next_child(loc.as_ref());
         }
+
+        return new_loc;
     }
 }
