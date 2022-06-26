@@ -1,5 +1,4 @@
 mod imp {
-    use chrono_tz::Tz;
     use gtk::{
         glib::{self, subclass::InitializingObject},
         prelude::InitializingWidgetExt,
@@ -7,9 +6,11 @@ mod imp {
         CompositeTemplate, ListBox, ScrolledWindow, SearchEntry, Stack,
     };
     use gweather::Location;
-    use he::{prelude::*, subclass::prelude::*, EmptyPage, MiniContentBlock, Window};
+    use he::{prelude::*, subclass::prelude::*, EmptyPage, Window};
     use unicode_casefold::UnicodeCaseFold;
     use unicode_normalization::UnicodeNormalization;
+
+    use crate::ui::dialogs::clock_location_row::ClockLocationRow;
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/co/tauos/Nixie/clock_locations.ui")]
@@ -94,13 +95,9 @@ mod imp {
             locations.sort_by(|a, b| a.sort_name().unwrap().cmp(&b.sort_name().unwrap()));
 
             for loc in locations.iter_mut() {
-                let tz: Tz = loc.timezone().unwrap().identifier().parse().unwrap();
-                self.listbox.append(
-                    &MiniContentBlock::builder()
-                        .title(&loc.name().unwrap().to_string())
-                        .subtitle(&loc.country_name().unwrap_or(glib::GString::from(tz.to_string())))
-                        .build(),
-                )
+                let row = &ClockLocationRow::new();
+                row.setup_row(loc.clone());
+                self.listbox.append(row)
             }
 
             self.stack.set_visible_child(&self.results.get());
