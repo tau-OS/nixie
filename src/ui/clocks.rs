@@ -2,7 +2,7 @@ mod imp {
     use gtk::{
         glib::{self, subclass::InitializingObject},
         subclass::prelude::*,
-        CompositeTemplate, TemplateChild, template_callbacks,
+        template_callbacks, CompositeTemplate, TemplateChild,
     };
     use he::{prelude::*, ContentList, OverlayButton};
 
@@ -60,7 +60,7 @@ use gtk::{
 };
 use he::prelude::*;
 
-use super::clock_row::generate_row;
+use super::clock_row::ClockRow;
 
 glib::wrapper! {
     pub struct ClocksPage(ObjectSubclass<imp::ClocksPage>)
@@ -75,7 +75,8 @@ impl ClocksPage {
 
     fn fill(&self) {
         let loc = gweather::Location::new_detached("San Francisco", None, 37.773972, -122.431297);
-        let block = generate_row(loc);
+        let block = ClockRow::new();
+        block.setup_row(loc);
 
         self.imp().list.add(&block);
     }
