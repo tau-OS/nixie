@@ -85,7 +85,7 @@ impl ClockRow {
 
         thread::spawn(move || loop {
             sender.send(true).expect("Could not send through channel");
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_millis(1));
         });
 
         let _self = self;
