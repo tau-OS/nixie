@@ -3,7 +3,7 @@ mod imp {
         glib::{self, subclass::InitializingObject},
         prelude::InitializingWidgetExt,
         subclass::prelude::*,
-        CompositeTemplate, ListBox, ScrolledWindow, SearchEntry, Stack,
+        CompositeTemplate, ListBox, ListBoxRow, ScrolledWindow, SearchEntry, Stack,
     };
     use gweather::Location;
     use he::{prelude::*, subclass::prelude::*, EmptyPage, Window};
@@ -95,10 +95,28 @@ mod imp {
             locations.sort_by(|a, b| a.sort_name().unwrap().cmp(&b.sort_name().unwrap()));
 
             for loc in locations.iter_mut() {
-                let row = &ClockLocationRow::new();
-                row.setup_row(loc.clone());
-                self.listbox.append(row)
+                let clock_row = &ClockLocationRow::new(loc.clone());
+
+                let row = ListBoxRow::builder().child(clock_row).build();
+
+                clock_row.connect_clicked(move |row| {
+                    println!(
+                        "Hello, {}",
+                        row.location()
+                            .name()
+                            .unwrap_or(glib::GString::from("This Should Never Happen"))
+                            .to_string()
+                    );
+                });
+
+                self.listbox.append(&row)
             }
+
+            self.listbox.connect_row_activated(move |_box, row| {
+                row.first_child()
+                    .unwrap()
+                    .emit_by_name::<()>("clicked", &[]);
+            });
 
             self.stack.set_visible_child(&self.results.get());
         }
