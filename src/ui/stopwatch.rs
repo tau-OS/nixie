@@ -19,6 +19,7 @@ mod imp {
         template_callbacks, Box, Button, CompositeTemplate, Label,
     };
     use he::{traits::ButtonExt as HeButtonExt, Colors, FillButton};
+    use log::debug;
     use std::sync::mpsc;
     use std::{
         cell::Cell,
@@ -102,6 +103,7 @@ mod imp {
 
         #[template_callback]
         fn handle_on_start_btn_click(&self, _button: &Button) {
+            debug!("HeFillButton<StopwatchPage>::clicked");
             match self.state.get() {
                 State::Stopped => self::StopwatchPage::start(self),
                 State::Running => todo!(),
@@ -133,6 +135,7 @@ mod imp {
 
             self.timer.replace(Stopwatch::new());
 
+            // TODO move this into its own Rust object
             timeout_add_local(
                 std::time::Duration::from_millis(1),
                 clone!(@weak obj => @default-return Continue(false), move || {
@@ -142,6 +145,10 @@ mod imp {
                     Continue(true)
                 }),
             );
+
+            obj.connect_realize(move |_| {
+                debug!("GtkBox<StopwatchPage>::realize");
+            });
         }
     }
 

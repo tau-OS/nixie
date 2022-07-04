@@ -7,6 +7,7 @@ mod imp {
     };
     use gweather::Location;
     use he::{prelude::*, subclass::prelude::*, EmptyPage, Window};
+    use log::debug;
     use unicode_casefold::UnicodeCaseFold;
     use unicode_normalization::UnicodeNormalization;
 
@@ -51,6 +52,7 @@ mod imp {
     impl ClockLocations {
         #[template_callback]
         fn on_search_mode_notify(obj: gtk::SearchBar) {
+            debug!("GtkSearchBar<ClockLocations>::search-mode-notify");
             if !obj.is_search_mode() {
                 obj.set_search_mode(true);
             }
@@ -58,6 +60,7 @@ mod imp {
 
         #[template_callback]
         fn on_search_changed(&self) {
+            debug!("GtkSearchEntry<ClockLocations>::search-changed");
             // TODO This should be added to the hella based ContentList
             let mut fc = self.listbox.first_child();
             while fc != None {
@@ -127,6 +130,10 @@ mod imp {
     impl ObjectImpl for ClockLocations {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
+
+            obj.connect_realize(move |_| {
+                debug!("HeWindow<ClockLocations>::realize");
+            });
         }
     }
     impl WidgetImpl for ClockLocations {}

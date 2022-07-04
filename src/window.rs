@@ -12,6 +12,7 @@ mod imp {
         CompositeTemplate,
     };
     use he::{prelude::*, subclass::prelude::*, ApplicationWindow};
+    use log::debug;
 
     use crate::ui::{clocks::ClocksPage, stopwatch::StopwatchPage};
 
@@ -49,6 +50,10 @@ mod imp {
     impl ObjectImpl for Window {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
+
+            obj.connect_realize(move |_| {
+                debug!("HeWindow<Window>::realize");
+            });
         }
     }
     impl WidgetImpl for Window {}

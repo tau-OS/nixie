@@ -5,6 +5,7 @@ mod imp {
         template_callbacks, CompositeTemplate, TemplateChild,
     };
     use he::{prelude::*, ContentList, OverlayButton};
+    use log::debug;
 
     use crate::{ui::dialogs::clock_locations::ClockLocations, window::Window};
 
@@ -21,6 +22,7 @@ mod imp {
     impl ClocksPage {
         #[template_callback]
         fn handle_btn_click(_button: &OverlayButton) {
+            debug!("HeOverlayButton<ClocksPage>::clicked");
             let dialog = ClockLocations::new(&Window::default());
             dialog.present();
         }
@@ -48,6 +50,10 @@ mod imp {
             self.parent_constructed(obj);
 
             obj.fill();
+
+            obj.connect_realize(move |_| {
+                debug!("GtkBox<ClocksPage>::realize");
+            });
         }
     }
     impl WidgetImpl for ClocksPage {}

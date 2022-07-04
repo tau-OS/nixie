@@ -5,6 +5,7 @@ use gtk::{
 };
 use gweather::{Location, LocationLevel};
 use he::{prelude::*, subclass::prelude::*, Bin, MiniContentBlock};
+use log::debug;
 
 mod imp {
     use gtk::{
@@ -13,6 +14,7 @@ mod imp {
     };
     use gweather::Location;
     use he::{prelude::*, subclass::prelude::*, MiniContentBlock};
+    use log::debug;
     use std::cell::Cell;
 
     #[derive(Default)]
@@ -33,6 +35,10 @@ mod imp {
     impl ObjectImpl for ClockLocationRow {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
+
+            obj.connect_realize(move |_| {
+                debug!("HeMiniContentBlock<ClockLocationsRow>::realize");
+            });
         }
         fn signals() -> &'static [Signal] {
             static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
@@ -68,6 +74,7 @@ impl ClockLocationRow {
             "clicked",
             false,
             clone!(@weak self as row => @default-return None, move |_| {
+                debug!("HeMiniContentBlock<ClockLocationsRow>::clicked");
                 callback(&row);
                 None
             }),

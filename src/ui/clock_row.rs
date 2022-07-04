@@ -11,7 +11,8 @@ use he::{prelude::*, Bin, MiniContentBlock, TextButton};
 
 mod imp {
     use gtk::{glib, subclass::prelude::*};
-    use he::{subclass::prelude::*, MiniContentBlock};
+    use he::{subclass::prelude::*, MiniContentBlock, prelude::*};
+    use log::debug;
 
     #[derive(Default)]
     pub struct ClockRow {}
@@ -28,6 +29,10 @@ mod imp {
     impl ObjectImpl for ClockRow {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
+
+            obj.connect_realize(move |_| {
+                debug!("HeMiniContentBlock<ClockRow>::realize");
+            });
         }
     }
     impl WidgetImpl for ClockRow {}
