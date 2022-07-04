@@ -98,9 +98,31 @@ mod imp {
             // TODO: Use User's accent colour
             self.start_btn.set_color(Colors::Purple);
 
+            self.clear_btn.set_label("Clear");
+            self.clear_btn.set_sensitive(true);
+            self.clear_btn.set_color(Colors::Red);
+
             self.time_container.add_css_class("paused-stopwatch");
             self.time_container.remove_css_class("running-stopwatch");
             self.time_container.remove_css_class("stopped-stopwatch");
+        }
+
+        fn clear(&self) {
+            let mut sw = self.timer.get();
+            sw.reset();
+            self.timer.replace(sw);
+            self.state.replace(State::Reset);
+
+            self.start_btn.set_label("Start");
+            self.start_btn.set_color(Colors::Purple);
+
+            self.clear_btn.set_label("Lap");
+            self.clear_btn.set_sensitive(false);
+            self.clear_btn.set_color(Colors::Purple);
+
+            self.time_container.add_css_class("stopped-stopwatch");
+            self.time_container.remove_css_class("running-stopwatch");
+            self.time_container.remove_css_class("paused-stopwatch");
         }
 
         pub fn update_time(&self) {
@@ -122,8 +144,18 @@ mod imp {
         fn handle_on_start_btn_click(&self, _button: &Button) {
             debug!("HeFillButton<StopwatchPage>::clicked");
             match self.state.get() {
+                State::Reset => self::StopwatchPage::start(self),
                 State::Stopped => self::StopwatchPage::start(self),
                 State::Running => self::StopwatchPage::stop(self),
+            }
+        }
+
+        #[template_callback]
+        fn handle_on_clear_btn_click(&self, _button: &Button) {
+            debug!("HeFillButton<StopwatchPage>::clicked (clear-btn)");
+            match self.state.get() {
+                State::Stopped => self::StopwatchPage::clear(self),
+                State::Running => unimplemented!(),
                 _ => unimplemented!(),
             }
         }
@@ -156,8 +188,10 @@ mod imp {
             timeout_add_local(
                 std::time::Duration::from_millis(1),
                 clone!(@weak obj => @default-return Continue(false), move || {
-                    if obj.imp().state.get() == State::Running {
-                        obj.imp().update_time();
+                    match obj.imp().state.get() {
+                        State::Running => obj.imp().update_time(),
+                        State::Reset => obj.imp().update_time(),
+                        _ => {}
                     }
                     Continue(true)
                 }),
