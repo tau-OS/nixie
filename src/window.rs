@@ -13,7 +13,7 @@ mod imp {
     };
     use he::{prelude::*, subclass::prelude::*, ApplicationWindow};
 
-    use crate::ui::clocks::ClocksPage;
+    use crate::ui::{clocks::ClocksPage, stopwatch::StopwatchPage};
 
     #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/window.ui")]
@@ -33,6 +33,7 @@ mod imp {
 
         fn class_init(klass: &mut Self::Class) {
             ClocksPage::ensure_type();
+            StopwatchPage::ensure_type();
 
             klass.bind_template();
         }

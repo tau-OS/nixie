@@ -44,9 +44,7 @@
               <object class="GtkStackPage">
                 <property name="title">Stopwatch</property>
                 <property name="child">
-                  <object class="HeEmptyPage">
-                    <property name="title">Empty lol</property>
-                  </object>
+                  <object class="NixieStopwatchPage"></object>
                 </property>
               </object>
             </child>
