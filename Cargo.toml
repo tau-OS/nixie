@@ -15,6 +15,7 @@ chrono = "0.4.19"
 chrono-tz = "0.6.1"
 unicode-casefold = "0.2"
 unicode-normalization = "0.1.19"
+stopwatch = "0.0.7"
 
 [build-dependencies]
 owo-colors = "3.4.0"

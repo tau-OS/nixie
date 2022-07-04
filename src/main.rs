@@ -1,4 +1,5 @@
 extern crate pretty_env_logger;
+extern crate stopwatch;
 
 mod application;
 mod config;
