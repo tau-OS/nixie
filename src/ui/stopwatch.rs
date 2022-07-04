@@ -20,7 +20,7 @@ mod imp {
     };
     use he::{traits::ButtonExt as HeButtonExt, Colors, FillButton};
     use log::debug;
-    use std::sync::mpsc;
+    use std::{sync::mpsc};
     use std::{
         cell::Cell,
         sync::mpsc::{Receiver, Sender},
@@ -75,7 +75,9 @@ mod imp {
     #[template_callbacks]
     impl StopwatchPage {
         fn start(&self) {
-            self.timer.replace(Stopwatch::start_new());
+            let mut sw = self.timer.get();
+            sw.start();
+            self.timer.replace(sw);
             self.state.replace(State::Running);
 
             self.start_btn.set_label("Pause");
@@ -83,6 +85,21 @@ mod imp {
 
             self.time_container.add_css_class("running-stopwatch");
             self.time_container.remove_css_class("paused-stopwatch");
+            self.time_container.remove_css_class("stopped-stopwatch");
+        }
+
+        fn stop(&self) {
+            let mut sw = self.timer.get();
+            sw.stop();
+            self.timer.replace(sw);
+            self.state.replace(State::Stopped);
+
+            self.start_btn.set_label("Resume");
+            // TODO: Use User's accent colour
+            self.start_btn.set_color(Colors::Purple);
+
+            self.time_container.add_css_class("paused-stopwatch");
+            self.time_container.remove_css_class("running-stopwatch");
             self.time_container.remove_css_class("stopped-stopwatch");
         }
 
@@ -106,7 +123,7 @@ mod imp {
             debug!("HeFillButton<StopwatchPage>::clicked");
             match self.state.get() {
                 State::Stopped => self::StopwatchPage::start(self),
-                State::Running => todo!(),
+                State::Running => self::StopwatchPage::stop(self),
                 _ => unimplemented!(),
             }
         }
