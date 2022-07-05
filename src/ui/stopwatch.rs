@@ -136,6 +136,7 @@ mod imp {
             self.time_container.remove_css_class("running-stopwatch");
             self.time_container.remove_css_class("paused-stopwatch");
             self.laps.remove_all();
+            self.current_lap.replace(0);
         }
 
         fn total_laps_duration(&self) -> f64 {
@@ -244,8 +245,6 @@ mod imp {
                     );
                     return row.upcast_ref::<Widget>().to_owned();
                 }
-                // TODO create Lap Row
-
             });
 
             // TODO move this into its own Rust object
