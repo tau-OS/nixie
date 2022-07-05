@@ -14,17 +14,17 @@ mod imp {
     use chrono::Duration;
     use gtk::{
         gio::ListStore,
-        glib::{self, clone, subclass::InitializingObject, timeout_add_local},
+        glib::{self, clone, subclass::InitializingObject, timeout_add_local, Object},
         prelude::*,
         subclass::prelude::*,
-        template_callbacks, Box, Button, CompositeTemplate, Label,
+        template_callbacks, Box, Button, CompositeTemplate, Label, ListBox, Revealer, Widget,
     };
     use he::{traits::ButtonExt as HeButtonExt, Colors, FillButton};
     use log::debug;
     use std::cell::Cell;
     use stopwatch::Stopwatch;
 
-    use crate::lap::StopwatchLap;
+    use crate::{lap::StopwatchLap, ui::widgets::stopwatch_laps_row::StopwatchLapsRow};
 
     use super::State;
 
@@ -48,6 +48,11 @@ mod imp {
         #[template_child]
         pub clear_btn: TemplateChild<FillButton>,
 
+        #[template_child]
+        pub laps_revealer: TemplateChild<Revealer>,
+        #[template_child]
+        pub laps_list: TemplateChild<ListBox>,
+
         pub timer: Cell<Stopwatch>,
         pub state: Cell<State>,
         pub laps: ListStore,
@@ -64,6 +69,8 @@ mod imp {
                 miliseconds_label: TemplateChild::default(),
                 start_btn: TemplateChild::default(),
                 clear_btn: TemplateChild::default(),
+                laps_revealer: TemplateChild::default(),
+                laps_list: TemplateChild::default(),
                 timer: Cell::new(Stopwatch::new()),
                 state: Cell::new(State::Stopped),
                 laps: ListStore::new(StopwatchLap::type_(&StopwatchLap::default())),
@@ -116,6 +123,7 @@ mod imp {
             sw.reset();
             self.timer.replace(sw);
             self.state.replace(State::Reset);
+            self.laps_revealer.set_reveal_child(false);
 
             self.start_btn.set_label("Start");
             self.start_btn.set_color(Colors::Purple);
@@ -127,6 +135,7 @@ mod imp {
             self.time_container.add_css_class("stopped-stopwatch");
             self.time_container.remove_css_class("running-stopwatch");
             self.time_container.remove_css_class("paused-stopwatch");
+            self.laps.remove_all();
         }
 
         fn total_laps_duration(&self) -> f64 {
@@ -136,9 +145,8 @@ mod imp {
                     .laps
                     .item(i)
                     .unwrap()
-                    .downcast_ref::<StopwatchLap>()
-                    .expect("Item should be of type 'StopwatchLap'")
-                    .to_owned();
+                    .downcast::<StopwatchLap>()
+                    .expect("Item should be of type 'StopwatchLap'");
 
                 total += lap.property_value("duration").get::<f64>().unwrap()
             }
@@ -147,6 +155,8 @@ mod imp {
 
         fn lap(&self) {
             self.current_lap.replace(self.current_lap.get() + 1);
+            self.laps_revealer
+                .set_reveal_child(self.current_lap.get() >= 1);
             let time = self.timer.get().elapsed().as_secs_f64();
             let duration = time - self.total_laps_duration();
             let lap = StopwatchLap::new(duration, self.current_lap.get());
@@ -210,6 +220,33 @@ mod imp {
             self.parent_constructed(obj);
 
             self.timer.replace(Stopwatch::new());
+
+            let _self = obj.clone();
+            self.laps_list.bind_model(Some(&self.laps), move |lap| {
+                let total = _self.imp().laps.n_items();
+                let mut _before: Option<Object> = None;
+                if total > 1 {
+                    _before = _self.imp().laps.item(total - 1)
+                }
+
+                let row;
+
+                if _before != None {
+                    row = StopwatchLapsRow::new(
+                        lap.clone().downcast::<StopwatchLap>().unwrap(),
+                        _before.unwrap().downcast::<StopwatchLap>().ok(),
+                    );
+                    return row.upcast_ref::<Widget>().to_owned();
+                } else {
+                    row = StopwatchLapsRow::new(
+                        lap.clone().downcast::<StopwatchLap>().unwrap(),
+                        None,
+                    );
+                    return row.upcast_ref::<Widget>().to_owned();
+                }
+                // TODO create Lap Row
+
+            });
 
             // TODO move this into its own Rust object
             timeout_add_local(
