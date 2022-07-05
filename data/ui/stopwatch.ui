@@ -105,6 +105,7 @@
                 <property name="use_underline">True</property>
                 <property name="hexpand">True</property>
                 <property name="halign">start</property>
+                <property name="color">purple</property>
                 <signal name="clicked" handler="handle_on_start_btn_click" swapped="true"/>
               </object>
             </child>
@@ -114,6 +115,7 @@
                 <property name="label">Lap</property>
                 <property name="width_request">120</property>
                 <property name="halign">end</property>
+                <property name="color">purple</property>
                 <signal name="clicked" handler="handle_on_clear_btn_click" swapped="true"/>
               </object>
             </child>

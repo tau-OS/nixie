@@ -83,6 +83,10 @@ mod imp {
             self.start_btn.set_label("Pause");
             self.start_btn.set_color(Colors::Yellow);
 
+            self.clear_btn.set_label("Lap");
+            self.clear_btn.set_sensitive(false);
+            self.clear_btn.set_color(Colors::Purple);
+
             self.time_container.add_css_class("running-stopwatch");
             self.time_container.remove_css_class("paused-stopwatch");
             self.time_container.remove_css_class("stopped-stopwatch");
