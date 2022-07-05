@@ -69,7 +69,7 @@ use he::prelude::*;
 
 use crate::application::Application;
 
-use super::clock_row::ClockRow;
+use super::widgets::clock_row::ClockRow;
 
 glib::wrapper! {
     pub struct ClocksPage(ObjectSubclass<imp::ClocksPage>)

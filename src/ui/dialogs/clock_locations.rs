@@ -11,7 +11,7 @@ mod imp {
     use unicode_casefold::UnicodeCaseFold;
     use unicode_normalization::UnicodeNormalization;
 
-    use crate::ui::dialogs::clock_location_row::ClockLocationRow;
+    use crate::ui::widgets::clock_location_row::ClockLocationRow;
 
     #[derive(CompositeTemplate, Default)]
     #[template(resource = "/co/tauos/Nixie/clock_locations.ui")]
