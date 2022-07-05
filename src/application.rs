@@ -1,10 +1,11 @@
-use crate::{window::Window, config::{VERSION, PROFILE, APP_ID}};
+use crate::{window::Window, config::{VERSION, PROFILE, APP_ID}, action};
 use gtk::{
     gio::{self, ApplicationFlags, Settings},
-    glib,
+    glib::{self, clone},
     prelude::*,
     subclass::prelude::*,
 };
+use he::{AboutWindow, AboutWindowLicenses};
 use log::info;
 
 mod imp {
@@ -36,7 +37,16 @@ mod imp {
         type ParentType = he::Application;
     }
 
-    impl ObjectImpl for Application {}
+    impl ObjectImpl for Application {
+        fn constructed(&self, obj: &Self::Type) {
+            self.parent_constructed(obj);
+
+            obj.setup_actions();
+
+            obj.set_accels_for_action("app.quit", &["<primary>q"]);
+            obj.set_accels_for_action("app.about", &["<primary>a"]);
+        }
+    }
     impl ApplicationImpl for Application {
         fn activate(&self, app: &Self::Type) {
             debug!("HeApplication<Application>::activate");
@@ -51,6 +61,25 @@ mod imp {
     }
     impl GtkApplicationImpl for Application {}
     impl HeApplicationImpl for Application {}
+}
+
+// Simple macro to make actions easier :)
+#[macro_export]
+macro_rules! action {
+    ($actions_group:expr, $name:expr, $callback:expr) => {
+        {
+            let simple_action = gio::SimpleAction::new($name, None);
+            simple_action.connect_activate($callback);
+            $actions_group.add_action(&simple_action);
+        }
+    };
+    ($actions_group:expr, $name:expr, $param_type:expr, $callback:expr) => {
+        {
+            let simple_action = gio::SimpleAction::new($name, $param_type);
+            simple_action.connect_activate($callback);
+            $actions_group.add_action(&simple_action);
+        }
+    };
 }
 
 glib::wrapper! {
@@ -68,6 +97,23 @@ impl Application {
         .expect("Failed to create Application")
     }
 
+    fn setup_actions(&self) {
+        action!(
+            self,
+            "quit",
+            clone!(@weak self as app => move |_, _| {
+                app.quit()
+            })
+        );
+        action!(
+            self,
+            "about",
+            clone!(@weak self as app => move |_, _| {
+                app.show_about();
+            })
+        )
+    }
+
     pub fn settings(&self) -> Settings {
         self.imp().settings.clone()
     }
@@ -81,6 +127,21 @@ impl Application {
         info!("Version: {} ({})", VERSION, PROFILE);
 
         ApplicationExtManual::run(self);
+    }
+
+    fn show_about(&self) {
+        let window = self.active_window().unwrap();
+        AboutWindow::builder()
+            .transient_for(&window)
+            .modal(true)
+            .icon_name(APP_ID)
+            .app_name("Nixie")
+            .version(VERSION)
+            .developer_names(vec!["Jamie Murphy".into()])
+            .copyright_year(2022)
+            .license(AboutWindowLicenses::Gplv3)
+            .build()
+            .present();
     }
 }
 

@@ -13,19 +13,18 @@ impl Default for State {
 mod imp {
     use chrono::Duration;
     use gtk::{
-        glib::{self, subclass::InitializingObject, timeout_add_local, clone},
+        gio::ListStore,
+        glib::{self, clone, subclass::InitializingObject, timeout_add_local},
         prelude::*,
         subclass::prelude::*,
         template_callbacks, Box, Button, CompositeTemplate, Label,
     };
     use he::{traits::ButtonExt as HeButtonExt, Colors, FillButton};
     use log::debug;
-    use std::{sync::mpsc};
-    use std::{
-        cell::Cell,
-        sync::mpsc::{Receiver, Sender},
-    };
+    use std::cell::Cell;
     use stopwatch::Stopwatch;
+
+    use crate::lap::StopwatchLap;
 
     use super::State;
 
@@ -51,8 +50,8 @@ mod imp {
 
         pub timer: Cell<Stopwatch>,
         pub state: Cell<State>,
-
-        pub time_thread: (Sender<()>, Receiver<()>),
+        pub laps: ListStore,
+        pub current_lap: Cell<i32>,
     }
 
     impl Default for StopwatchPage {
@@ -67,7 +66,8 @@ mod imp {
                 clear_btn: TemplateChild::default(),
                 timer: Cell::new(Stopwatch::new()),
                 state: Cell::new(State::Stopped),
-                time_thread: mpsc::channel(),
+                laps: ListStore::new(StopwatchLap::type_(&StopwatchLap::default())),
+                current_lap: Cell::new(0),
             }
         }
     }
@@ -84,7 +84,7 @@ mod imp {
             self.start_btn.set_color(Colors::Yellow);
 
             self.clear_btn.set_label("Lap");
-            self.clear_btn.set_sensitive(false);
+            self.clear_btn.set_sensitive(true);
             self.clear_btn.set_color(Colors::Purple);
 
             self.time_container.add_css_class("running-stopwatch");
@@ -129,6 +129,30 @@ mod imp {
             self.time_container.remove_css_class("paused-stopwatch");
         }
 
+        fn total_laps_duration(&self) -> f64 {
+            let mut total = 0.0;
+            for i in 0..self.laps.n_items() {
+                let lap = self
+                    .laps
+                    .item(i)
+                    .unwrap()
+                    .downcast_ref::<StopwatchLap>()
+                    .expect("Item should be of type 'StopwatchLap'")
+                    .to_owned();
+
+                total += lap.property_value("duration").get::<f64>().unwrap()
+            }
+            return total;
+        }
+
+        fn lap(&self) {
+            self.current_lap.replace(self.current_lap.get() + 1);
+            let time = self.timer.get().elapsed().as_secs_f64();
+            let duration = time - self.total_laps_duration();
+            let lap = StopwatchLap::new(duration, self.current_lap.get());
+            self.laps.insert(0, &lap);
+        }
+
         pub fn update_time(&self) {
             let duration = Duration::from_std(self.timer.get().elapsed()).unwrap();
 
@@ -140,8 +164,7 @@ mod imp {
                 .set_label(&format!("{}\u{200E}", duration.num_minutes()));
             self.seconds_label
                 .set_label(&format!("{}\u{200E}", duration.num_seconds()));
-            self.miliseconds_label
-                .set_label(&format!("{}", ms));
+            self.miliseconds_label.set_label(&format!("{}", ms));
         }
 
         #[template_callback]
@@ -159,7 +182,7 @@ mod imp {
             debug!("HeFillButton<StopwatchPage>::clicked (clear-btn)");
             match self.state.get() {
                 State::Stopped => self::StopwatchPage::clear(self),
-                State::Running => unimplemented!(),
+                State::Running => self::StopwatchPage::lap(self),
                 _ => unimplemented!(),
             }
         }

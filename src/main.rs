@@ -5,6 +5,7 @@ mod application;
 mod config;
 mod ui;
 mod window;
+mod lap;
 
 use config::RESOURCES_FILE;
 use gettextrs::gettext;
