@@ -1,9 +1,10 @@
 mod imp {
     use gtk::{
-        glib::{self, subclass::InitializingObject},
+        gio::ListStore,
+        glib::{self, subclass::InitializingObject, Object},
         prelude::InitializingWidgetExt,
         subclass::prelude::*,
-        CompositeTemplate, ListBox, ListBoxRow, ScrolledWindow, SearchEntry, Stack,
+        CompositeTemplate, ListBox, ListBoxRow, ScrolledWindow, SearchEntry, Stack, Widget,
     };
     use gweather::Location;
     use he::{prelude::*, subclass::prelude::*, EmptyPage, Window};
@@ -13,7 +14,7 @@ mod imp {
 
     use crate::ui::widgets::clock_location_row::ClockLocationRow;
 
-    #[derive(CompositeTemplate, Default)]
+    #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/clock_locations.ui")]
     pub struct ClockLocations {
         #[template_child]
@@ -29,7 +30,20 @@ mod imp {
         #[template_child]
         pub listbox: TemplateChild<ListBox>,
 
-        pub locations_vec: Vec<gweather::Location>,
+        pub locations: ListStore,
+    }
+
+    impl Default for ClockLocations {
+        fn default() -> Self {
+            Self {
+                entry: TemplateChild::default(),
+                stack: TemplateChild::default(),
+                empty_search: TemplateChild::default(),
+                results: TemplateChild::default(),
+                listbox: TemplateChild::default(),
+                locations: ListStore::new(Location::type_(&Location::world().unwrap())),
+            }
+        }
     }
 
     #[glib::object_subclass]
@@ -68,8 +82,7 @@ mod imp {
                 fc = self.listbox.first_child();
             }
 
-            let mut locations = Vec::new();
-            locations.clear();
+            self.locations.remove_all();
 
             if self.entry.text() == "" {
                 self.stack.set_visible_child(&self.empty_search.get());
@@ -88,37 +101,27 @@ mod imp {
                 return;
             }
 
-            locations = super::ClockLocations::query_locations(&world.unwrap(), search);
+            let mut loc = super::ClockLocations::query_locations(&world.unwrap(), search);
+            for location in loc.iter_mut() {
+                self.locations.append(&location.clone().upcast::<Object>());
+            }
 
-            if locations.len() == 0 {
+            if self.locations.n_items() == 0 {
                 self.stack.set_visible_child(&self.empty_search.get());
                 return;
             }
 
-            locations.sort_by(|a, b| a.sort_name().unwrap().cmp(&b.sort_name().unwrap()));
-
-            for loc in locations.iter_mut() {
-                let clock_row = &ClockLocationRow::new(loc.clone());
-
-                let row = ListBoxRow::builder().child(clock_row).build();
-
-                clock_row.connect_clicked(move |row| {
-                    println!(
-                        "Hello, {}",
-                        row.location()
-                            .name()
-                            .unwrap_or(glib::GString::from("This Should Never Happen"))
-                            .to_string()
-                    );
-                });
-
-                self.listbox.append(&row)
-            }
-
-            self.listbox.connect_row_activated(move |_box, row| {
-                row.first_child()
+            self.locations.sort(|a, b| {
+                a.clone().downcast::<Location>()
                     .unwrap()
-                    .emit_by_name::<()>("clicked", &[]);
+                    .sort_name()
+                    .unwrap()
+                    .cmp(
+                        &b.clone().downcast::<Location>()
+                            .unwrap()
+                            .sort_name()
+                            .unwrap(),
+                    )
             });
 
             self.stack.set_visible_child(&self.results.get());
@@ -131,9 +134,23 @@ mod imp {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
 
+            self.entry
+                .set_key_capture_widget(Some(&obj.upcast_ref::<Widget>().to_owned()));
+
             obj.connect_realize(move |_| {
                 debug!("HeWindow<ClockLocations>::realize");
             });
+
+            self.listbox
+                .bind_model(Some(&self.locations), move |location| {
+                    let crow = ClockLocationRow::new(
+                        location.downcast_ref::<Location>().unwrap().to_owned(),
+                    );
+
+                    let row = ListBoxRow::builder().child(&crow).build();
+
+                    return row.upcast_ref::<Widget>().to_owned();
+                });
         }
     }
     impl WidgetImpl for ClockLocations {}
