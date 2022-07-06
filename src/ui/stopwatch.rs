@@ -17,7 +17,8 @@ mod imp {
         glib::{self, clone, subclass::InitializingObject, timeout_add_local, Object},
         prelude::*,
         subclass::prelude::*,
-        template_callbacks, Box, Button, CompositeTemplate, Label, ListBox, Revealer, Widget,
+        template_callbacks, Align, Box, Button, CompositeTemplate, Label, ListBox, Revealer,
+        Widget,
     };
     use he::{traits::ButtonExt as HeButtonExt, Colors, FillButton};
     use log::debug;
@@ -139,8 +140,8 @@ mod imp {
             self.current_lap.replace(0);
         }
 
-        fn total_laps_duration(&self) -> f64 {
-            let mut total = 0.0;
+        fn total_laps_duration(&self) -> u64 {
+            let mut total = 0;
             for i in 0..self.laps.n_items() {
                 let lap = self
                     .laps
@@ -149,7 +150,7 @@ mod imp {
                     .downcast::<StopwatchLap>()
                     .expect("Item should be of type 'StopwatchLap'");
 
-                total += lap.property_value("duration").get::<f64>().unwrap()
+                total += lap.property_value("duration").get::<u64>().unwrap()
             }
             return total;
         }
@@ -158,9 +159,9 @@ mod imp {
             self.current_lap.replace(self.current_lap.get() + 1);
             self.laps_revealer
                 .set_reveal_child(self.current_lap.get() >= 1);
-            let time = self.timer.get().elapsed().as_secs_f64();
+            let time: u64 = self.timer.get().elapsed().as_millis().try_into().unwrap();
             let duration = time - self.total_laps_duration();
-            let lap = StopwatchLap::new(duration, self.current_lap.get());
+            let lap = StopwatchLap::new(duration.try_into().unwrap(), self.current_lap.get());
             self.laps.insert(0, &lap);
         }
 
@@ -244,6 +245,40 @@ mod imp {
                         None,
                     );
                     return row.upcast_ref::<Widget>().to_owned();
+                }
+            });
+
+            let _self_revealer = obj.clone();
+            self.laps_revealer.connect_reveal_child_notify(move |_| {
+                debug!("GtkRevealer<laps_revealer>::reveal-child");
+                if _self_revealer.imp().laps_revealer.reveals_child() == true {
+                    _self_revealer
+                        .imp()
+                        .time_container
+                        .parent()
+                        .unwrap()
+                        .set_vexpand(false);
+                    _self_revealer.imp().time_container.set_margin_top(18);
+                    _self_revealer
+                        .imp()
+                        .time_container
+                        .parent()
+                        .unwrap()
+                        .set_valign(Align::Center);
+                } else {
+                    _self_revealer
+                        .imp()
+                        .time_container
+                        .parent()
+                        .unwrap()
+                        .set_vexpand(true);
+                    _self_revealer.imp().time_container.set_margin_top(0);
+                    _self_revealer
+                        .imp()
+                        .time_container
+                        .parent()
+                        .unwrap()
+                        .set_valign(Align::End);
                 }
             });
 

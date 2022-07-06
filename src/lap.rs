@@ -6,8 +6,8 @@ use gtk::{
 mod imp {
     use gtk::{
         glib::{
-            self, object_subclass, once_cell::sync::Lazy, ParamFlags, ParamSpec, ParamSpecDouble,
-            ParamSpecInt,
+            self, object_subclass, once_cell::sync::Lazy, ParamFlags, ParamSpec, ParamSpecInt,
+            ParamSpecUInt64,
         },
         prelude::ToValue,
         subclass::prelude::*,
@@ -16,8 +16,8 @@ mod imp {
 
     #[derive(Default)]
     pub struct StopwatchLap {
-        pub duration: Cell<f64>,
-        pub index: Cell<f64>,
+        pub duration: Cell<u64>,
+        pub index: Cell<u64>,
     }
 
     #[object_subclass]
@@ -30,13 +30,13 @@ mod imp {
         fn properties() -> &'static [ParamSpec] {
             static PROPERTIES: Lazy<Vec<ParamSpec>> = Lazy::new(|| {
                 vec![
-                    ParamSpecDouble::new(
+                    ParamSpecUInt64::new(
                         "duration",
                         "",
                         "",
-                        f64::MIN,
-                        f64::MAX,
-                        0.0,
+                        u64::MIN,
+                        u64::MAX,
+                        0,
                         ParamFlags::READWRITE,
                     ),
                     ParamSpecInt::new(
@@ -64,12 +64,16 @@ mod imp {
             match pspec.name() {
                 "duration" => self.duration.replace(
                     value
-                        .get::<f64>()
+                        .get::<u64>()
                         .expect("Failed to get floating point value"),
                 ),
-                "index" => self
-                    .index
-                    .replace(value.get::<i32>().expect("Failed to get integer value").into()),
+                "index" => self.index.replace(
+                    value
+                        .get::<i32>()
+                        .expect("Failed to get integer value")
+                        .try_into()
+                        .unwrap(),
+                ),
                 _ => unimplemented!(),
             };
         }
@@ -90,13 +94,13 @@ wrapper! {
 
 impl Default for StopwatchLap {
     fn default() -> Self {
-        Object::new(&[("duration", &0.0.to_value()), ("index", &0.to_value())])
+        Object::new(&[("duration", &(0 as u64).to_value()), ("index", &0.to_value())])
             .expect("Failed to create StopwatchLap")
     }
 }
 
 impl StopwatchLap {
-    pub fn new(duration: f64, index: i32) -> Self {
+    pub fn new(duration: u64, index: i32) -> Self {
         Object::new(&[
             ("duration", &duration.to_value()),
             ("index", &index.to_value()),

@@ -76,18 +76,19 @@ impl StopwatchLapsRow {
         );
 
         obj.imp().duration_label.set_label(&Self::get_duration(
-            current.property_value("duration").get::<f64>().unwrap(),
+            current.property_value("duration").get::<u64>().unwrap().try_into().unwrap(),
         ));
 
         if before != None {
-            // TODO delta label
-            obj.imp().difference_label.set_label (&Self::get_delta_label(current.clone(), before.clone()));
+            obj.imp()
+                .difference_label
+                .set_label(&Self::get_delta_label(current.clone(), before.clone()));
 
             let diff = Self::get_delta_duration(current, before);
-            if diff > 0.0 {
+            if diff > 0 {
                 // Add CSS class
                 obj.add_css_class("error");
-            } else if diff < 0.0 {
+            } else if diff < 0 {
                 obj.add_css_class("accent");
             }
         }
@@ -97,9 +98,9 @@ impl StopwatchLapsRow {
 
     fn get_delta_label(current: StopwatchLap, before: Option<StopwatchLap>) -> String {
         if before != None {
-            let diff = current.property_value("duration").get::<f64>().unwrap();
+            let diff = Self::get_delta_duration(current, before);
             let label = Self::get_duration(diff);
-            if diff < 0.0 {
+            if diff < 0 {
                 return format!("-{}", label);
             } else {
                 return format!("+{}", label);
@@ -108,21 +109,21 @@ impl StopwatchLapsRow {
         return "".to_string();
     }
 
-    fn get_delta_duration(current: StopwatchLap, before: Option<StopwatchLap>) -> f64 {
+    fn get_delta_duration(current: StopwatchLap, before: Option<StopwatchLap>) -> i64 {
         if before != None {
-            return current.property_value("duration").get::<f64>().unwrap()
+            return current.property_value("duration").get::<u64>().unwrap() as i64
                 - before
                     .unwrap()
                     .property_value("duration")
-                    .get::<f64>()
-                    .unwrap();
+                    .get::<u64>()
+                    .unwrap() as i64;
         }
-        return 0.0;
+        return 0;
     }
 
-    fn get_duration(duration: f64) -> String {
+    fn get_duration(duration: i64) -> String {
         // math!
-        let time = Duration::seconds(((duration * 100.0).floor() / 100.0) as i64);
+        let time = Duration::milliseconds(duration);
         let ms = ((time.num_milliseconds() / 100) % 10) * 10;
 
         return format!(
