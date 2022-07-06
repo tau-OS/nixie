@@ -100,17 +100,17 @@ fn main() {
         Command::new("appstream-util")
             .arg("validate")
             .arg("--nonet")
-            .arg(Path::new("./data/co.tauos.Nixie.metainfo.xml")),
+            .arg(Path::new(&format!("./data/{}.metainfo.xml", base_id))),
     );
 
     execute_maybe_cmd(
         Command::new("glib-compile-schemas")
             .arg("--strict")
             .arg("--dry-run")
-            .arg("data/co.tauos.Nixie.gschema.xml"),
+            .arg(&format!("data/{}.gschema.xml", base_id)),
     );
 
-    execute_maybe_cmd(Command::new("desktop-file-validate").arg("data/co.tauos.Nixie.desktop"));
+    execute_maybe_cmd(Command::new("desktop-file-validate").arg(&format!("data/{}.desktop", base_id)));
 
     // INSTALL SCHEMAS
     //////////////////
@@ -121,7 +121,7 @@ fn main() {
     execute_cmd(
         Command::new("sudo")
             .arg("cp")
-            .arg("data/co.tauos.Nixie.gschema.xml")
+            .arg(&format!("data/{}.gschema.xml", base_id))
             .arg("/usr/share/glib-2.0/schemas/"),
     );
 
@@ -134,14 +134,14 @@ fn main() {
     execute_cmd(
         Command::new("sudo")
             .arg("cp")
-            .arg("data/co.tauos.Nixie.metainfo.xml")
+            .arg(format!("data/{}.metainfo.xml", base_id))
             .arg("/usr/share/metainfo"),
     );
 
     execute_cmd(
         Command::new("sudo")
             .arg("cp")
-            .arg("data/co.tauos.Nixie.desktop")
+            .arg(format!("data/{}.desktop", base_id))
             .arg("/usr/share/applications"),
     );
 }
