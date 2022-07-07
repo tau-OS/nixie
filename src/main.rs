@@ -7,6 +7,7 @@ mod config;
 mod lap;
 mod ui;
 mod window;
+mod clock_store;
 
 use config::RESOURCES_FILE;
 use gettextrs::gettext;
