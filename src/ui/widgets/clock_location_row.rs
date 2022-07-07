@@ -1,95 +1,152 @@
+use chrono::{Duration, Local, Offset, Utc};
 use chrono_tz::Tz;
+use gettextrs::ngettext;
 use gtk::{
-    glib::{self, clone, Object, SignalHandlerId},
-    Accessible, Buildable, ConstraintTarget, Widget,
+    glib::{wrapper, Object},
+    subclass::prelude::*,
+    Accessible, Actionable, Buildable, ConstraintTarget, Widget,
 };
 use gweather::{Location, LocationLevel};
-use he::{prelude::*, subclass::prelude::*, Bin, MiniContentBlock};
-use log::debug;
 
 mod imp {
+    use std::cell::{Cell, RefCell};
+
     use gtk::{
-        glib::{self, once_cell::sync::Lazy, subclass::Signal},
+        glib::{
+            self, object_subclass, once_cell::sync::Lazy, subclass::InitializingObject, ParamFlags,
+            ParamSpec, ParamSpecString, Value,
+        },
+        prelude::*,
         subclass::prelude::*,
+        CompositeTemplate, ListBoxRow,
     };
     use gweather::Location;
-    use he::{prelude::*, subclass::prelude::*, MiniContentBlock};
     use log::debug;
-    use std::cell::Cell;
 
-    #[derive(Default)]
+    #[derive(CompositeTemplate)]
+    #[template(resource = "/co/tauos/Nixie/clock_location_row.ui")]
     pub struct ClockLocationRow {
-        // yes its a vector, Default isn't implemented idk why
-        pub location: Cell<Vec<Location>>,
+        pub location: Cell<Location>,
+        pub clock_name: RefCell<Option<String>>,
+        pub clock_location: RefCell<Option<String>>,
+        pub clock_tz: RefCell<Option<String>>,
     }
 
-    #[glib::object_subclass]
+    impl Default for ClockLocationRow {
+        fn default() -> Self {
+            Self {
+                location: Cell::new(Location::world().unwrap()),
+                clock_name: RefCell::new(None),
+                clock_location: RefCell::new(None),
+                clock_tz: RefCell::new(None),
+            }
+        }
+    }
+
+    #[object_subclass]
     impl ObjectSubclass for ClockLocationRow {
-        const NAME: &'static str = "ClockLocationRow";
+        const NAME: &'static str = "NixieClockLocationRow";
         type Type = super::ClockLocationRow;
-        type ParentType = MiniContentBlock;
+        type ParentType = ListBoxRow;
+
+        fn class_init(klass: &mut Self::Class) {
+            klass.bind_template();
+        }
+
+        fn instance_init(obj: &InitializingObject<Self>) {
+            obj.init_template();
+        }
     }
 
-    impl MiniContentBlockImpl for ClockLocationRow {}
-    impl BinImpl for ClockLocationRow {}
+    impl ListBoxRowImpl for ClockLocationRow {}
     impl ObjectImpl for ClockLocationRow {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
 
             obj.connect_realize(move |_| {
-                debug!("HeMiniContentBlock<ClockLocationsRow>::realize");
+                debug!("GtkListBoxRow<ClockLocationRow>::realize");
             });
         }
-        fn signals() -> &'static [Signal] {
-            static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
-                vec![Signal::builder("clicked", &[], <()>::static_type().into())
-                    .action()
-                    .build()]
+
+        fn properties() -> &'static [ParamSpec] {
+            static PROPERTIES: Lazy<Vec<ParamSpec>> = Lazy::new(|| {
+                vec![
+                    ParamSpecString::new("clock-name", "", "", None, ParamFlags::READWRITE),
+                    ParamSpecString::new("clock-location", "", "", None, ParamFlags::READWRITE),
+                    ParamSpecString::new("clock-tz", "", "", None, ParamFlags::READWRITE),
+                ]
             });
-            SIGNALS.as_ref()
+            PROPERTIES.as_ref()
+        }
+
+        fn set_property(&self, _obj: &Self::Type, _id: usize, value: &Value, pspec: &ParamSpec) {
+            match pspec.name() {
+                "clock-name" => {
+                    let p = value.get::<&str>().expect("Expected a string");
+                    self.clock_name.replace(Some(p.to_string()));
+                }
+                "clock-location" => {
+                    // This value should be optional
+                    let p = value.get::<&str>().unwrap_or_default();
+                    self.clock_location.replace(Some(p.to_string()));
+                }
+                "clock-tz" => {
+                    let p = value.get::<&str>().expect("Expected a string");
+                    self.clock_tz.replace(Some(p.to_string()));
+                }
+                _ => unimplemented!(),
+            };
+        }
+
+        fn property(&self, _obj: &Self::Type, _id: usize, pspec: &ParamSpec) -> glib::Value {
+            match pspec.name() {
+                "clock-name" => self
+                    .clock_name
+                    .try_borrow()
+                    .unwrap()
+                    .as_ref()
+                    .map(|v| &v[..])
+                    .to_value(),
+                "clock-location" => self
+                    .clock_location
+                    .try_borrow()
+                    .unwrap()
+                    .as_ref()
+                    .map(|v| &v[..])
+                    .to_value(),
+                "clock-tz" => self
+                    .clock_tz
+                    .try_borrow()
+                    .unwrap()
+                    .as_ref()
+                    .map(|v| &v[..])
+                    .to_value(),
+                _ => unimplemented!(),
+            }
         }
     }
     impl WidgetImpl for ClockLocationRow {}
 }
 
-glib::wrapper! {
+wrapper! {
     pub struct ClockLocationRow(ObjectSubclass<imp::ClockLocationRow>)
-        @extends MiniContentBlock, Bin, Widget,
-        @implements Accessible, Buildable, ConstraintTarget;
+        @extends Widget,
+        @implements Accessible, Buildable, ConstraintTarget, Actionable;
 }
 
 impl ClockLocationRow {
     pub fn new(loc: Location) -> Self {
-        let obj: ClockLocationRow = Object::new(&[]).expect("Failed to create ClockLocationRow");
-        obj.imp().location.replace(vec![loc.clone()]);
-        obj.setup_row(loc);
+        let obj: ClockLocationRow = Object::new(&[
+            ("clock-name", &Self::parse_clock_name(loc.clone())),
+            (
+                "clock-location",
+                &loc.clone().country_name().map(|v| String::from(v)),
+            ),
+            ("clock-tz", &Self::parse_clock_tz(loc.clone())),
+        ])
+        .expect("Failed to create ClockLocationRow");
+        obj.imp().location.replace(loc);
         obj
-    }
-
-    pub fn connect_clicked<F>(&self, callback: F) -> SignalHandlerId
-    where
-        F: Fn(&Self) + 'static,
-    {
-        self.connect_local(
-            "clicked",
-            false,
-            clone!(@weak self as row => @default-return None, move |_| {
-                debug!("HeMiniContentBlock<ClockLocationsRow>::clicked");
-                callback(&row);
-                None
-            }),
-        )
-    }
-
-    pub fn location(&self) -> Location {
-        return self
-            .imp()
-            .location
-            .take()
-            .get(0)
-            // TODO: should be able to use .get instead of .take. hell, i shouldn't even need a Vector. location moment.
-            .unwrap_or(&Location::world().unwrap())
-            .clone();
     }
 
     fn get_state_name(loc: Location) -> Option<String> {
@@ -105,17 +162,50 @@ impl ClockLocationRow {
         return Some(format!(", {}", top_loc.name().unwrap().to_string()));
     }
 
-    fn setup_row(&self, loc: Location) {
+    fn parse_clock_name(loc: Location) -> String {
+        return format!(
+            "{}{}",
+            loc.name().unwrap().to_string(),
+            format!(
+                "{}",
+                Self::get_state_name(loc.clone()).unwrap_or(String::new())
+            )
+        );
+    }
+
+    fn parse_clock_tz(loc: Location) -> String {
         let tz: Tz = loc.timezone().unwrap().identifier().parse().unwrap();
 
-        self.set_title(&format!(
-            "{}{}",
-            &loc.name().unwrap().to_string(),
-            Self::get_state_name(loc.clone()).unwrap_or(String::new())
-        ));
-        self.set_subtitle(
-            &loc.country_name()
-                .unwrap_or(glib::GString::from(tz.to_string())),
-        );
+        // Get timezone difference
+        let local = Duration::seconds(
+            (Local::now().offset().utc_minus_local()
+                - Utc::now()
+                    .with_timezone(&tz)
+                    .offset()
+                    .fix()
+                    .utc_minus_local())
+            .into(),
+        )
+        .num_hours();
+
+        let mut message = String::from("Current timezone");
+
+        if local > 0 {
+            message = ngettext!(
+                "{} hour earlier",
+                "{} hours earlier",
+                local.clone().try_into().unwrap(),
+                local.clone().abs()
+            );
+        } else if local < 0 {
+            message = ngettext!(
+                "{} hour later",
+                "{} hours later",
+                local.clone().abs().try_into().unwrap(),
+                local.clone().abs()
+            );
+        }
+
+        return format!("{} • {}", &tz.to_string(), message.clone());
     }
 }
