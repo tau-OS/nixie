@@ -12,7 +12,7 @@ mod imp {
     use unicode_casefold::UnicodeCaseFold;
     use unicode_normalization::UnicodeNormalization;
 
-    use crate::ui::widgets::clock_location_row::ClockLocationRow;
+    use crate::{ui::widgets::clock_location_row::ClockLocationRow, clock_store::ClockStore};
 
     #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/clock_locations.ui")]
@@ -125,6 +125,12 @@ mod imp {
             });
 
             self.stack.set_visible_child(&self.results.get());
+        }
+
+        #[template_callback]
+        fn on_item_activated (&self, _row: ListBoxRow) {
+            let store = ClockStore::default();
+            store.serialise_clocks(self.locations.clone());
         }
     }
 

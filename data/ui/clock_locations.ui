@@ -47,6 +47,7 @@
                     <property name="margin_bottom">18</property>
                     <property name="margin_start">12</property>
                     <property name="margin_end">12</property>
+                    <signal name="row-activated" handler="on_item_activated" swapped="true" />
                     <style>
                       <class name="boxed-list" />
                     </style>
