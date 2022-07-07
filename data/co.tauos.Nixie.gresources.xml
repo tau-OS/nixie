@@ -5,6 +5,7 @@
         <file alias="stopwatch.ui">ui/stopwatch.ui</file>
         <file alias="stopwatch_laps.ui">ui/stopwatch_laps.ui</file>
         <file alias="clock_locations.ui">ui/clock_locations.ui</file>
+        <file alias="clock_location_row.ui">ui/clock_location_row.ui</file>
         <file alias="window.ui">ui/window.ui</file>
         <file>style.css</file>
         <file>style-dark.css</file>
