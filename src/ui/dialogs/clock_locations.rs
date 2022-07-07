@@ -1,7 +1,12 @@
 mod imp {
     use gtk::{
         gio::ListStore,
-        glib::{self, subclass::InitializingObject, Object},
+        glib::{
+            self,
+            once_cell::sync::Lazy,
+            subclass::{InitializingObject, Signal},
+            Object,
+        },
         prelude::InitializingWidgetExt,
         subclass::prelude::*,
         CompositeTemplate, ListBox, ListBoxRow, ScrolledWindow, SearchEntry, Stack, Widget,
@@ -12,7 +17,7 @@ mod imp {
     use unicode_casefold::UnicodeCaseFold;
     use unicode_normalization::UnicodeNormalization;
 
-    use crate::{ui::widgets::clock_location_row::ClockLocationRow, clock_store::ClockStore};
+    use crate::ui::widgets::clock_location_row::ClockLocationRow;
 
     #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/clock_locations.ui")]
@@ -61,6 +66,45 @@ mod imp {
             obj.init_template();
         }
     }
+
+    impl HeWindowImpl for ClockLocations {}
+    impl WindowImpl for ClockLocations {}
+    impl ObjectImpl for ClockLocations {
+        fn constructed(&self, obj: &Self::Type) {
+            self.parent_constructed(obj);
+
+            self.entry
+                .set_key_capture_widget(Some(&obj.upcast_ref::<Widget>().to_owned()));
+
+            obj.connect_realize(move |_| {
+                debug!("HeWindow<ClockLocations>::realize");
+            });
+
+            self.listbox
+                .bind_model(Some(&self.locations), move |location| {
+                    let crow = ClockLocationRow::new(
+                        location.downcast_ref::<Location>().unwrap().to_owned(),
+                    );
+
+                    let row = ListBoxRow::builder().child(&crow).build();
+
+                    return row.upcast_ref::<Widget>().to_owned();
+                });
+        }
+
+        fn signals() -> &'static [Signal] {
+            static SIGNALS: Lazy<Vec<Signal>> = Lazy::new(|| {
+                vec![Signal::builder(
+                    "location-added",
+                    &[Location::static_type().into()],
+                    <()>::static_type().into(),
+                )
+                .build()]
+            });
+            SIGNALS.as_ref()
+        }
+    }
+    impl WidgetImpl for ClockLocations {}
 
     #[gtk::template_callbacks]
     impl ClockLocations {
@@ -112,12 +156,14 @@ mod imp {
             }
 
             self.locations.sort(|a, b| {
-                a.clone().downcast::<Location>()
+                a.clone()
+                    .downcast::<Location>()
                     .unwrap()
                     .sort_name()
                     .unwrap()
                     .cmp(
-                        &b.clone().downcast::<Location>()
+                        &b.clone()
+                            .downcast::<Location>()
                             .unwrap()
                             .sort_name()
                             .unwrap(),
@@ -128,47 +174,30 @@ mod imp {
         }
 
         #[template_callback]
-        fn on_item_activated (&self, _row: ListBoxRow) {
-            let store = ClockStore::default();
-            store.serialise_clocks(self.locations.clone());
+        fn on_item_activated(&self, row: ListBoxRow) {
+            debug!("GtkListBox<ClockLocations>::item-activated");
+            self.instance().emit_by_name::<()>(
+                "location-added",
+                &[&row
+                    .child()
+                    .unwrap()
+                    .downcast::<ClockLocationRow>()
+                    .unwrap()
+                    .location()],
+            );
+            self.instance().destroy();
         }
     }
-
-    impl HeWindowImpl for ClockLocations {}
-    impl WindowImpl for ClockLocations {}
-    impl ObjectImpl for ClockLocations {
-        fn constructed(&self, obj: &Self::Type) {
-            self.parent_constructed(obj);
-
-            self.entry
-                .set_key_capture_widget(Some(&obj.upcast_ref::<Widget>().to_owned()));
-
-            obj.connect_realize(move |_| {
-                debug!("HeWindow<ClockLocations>::realize");
-            });
-
-            self.listbox
-                .bind_model(Some(&self.locations), move |location| {
-                    let crow = ClockLocationRow::new(
-                        location.downcast_ref::<Location>().unwrap().to_owned(),
-                    );
-
-                    let row = ListBoxRow::builder().child(&crow).build();
-
-                    return row.upcast_ref::<Widget>().to_owned();
-                });
-        }
-    }
-    impl WidgetImpl for ClockLocations {}
 }
 
 use gweather::{Location, LocationLevel};
 
 use gtk::{
     gio::{ActionGroup, ActionMap},
-    glib::{self, Object},
+    glib::{self, closure_local, Object, SignalHandlerId},
     Root, Widget,
 };
+use he::prelude::*;
 use unicode_casefold::UnicodeCaseFold;
 use unicode_normalization::UnicodeNormalization;
 
@@ -183,6 +212,19 @@ const RESULT_COUNT_LIMIT: usize = 12;
 impl ClockLocations {
     pub fn new(parent: &crate::window::Window) -> Self {
         Object::new(&[("parent", parent)]).expect("Failed to create ClockLocations")
+    }
+
+    pub fn connect_location_added<F: Fn(&Self, Location) + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        self.connect_closure(
+            "location-added",
+            true,
+            closure_local!(|obj, location| {
+                f(&obj, location);
+            }),
+        )
     }
 
     fn query_locations(location: &Location, search: String) -> Vec<Location> {

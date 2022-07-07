@@ -46,9 +46,16 @@ mod imp {
     #[template_callbacks]
     impl ClocksPage {
         #[template_callback]
-        fn handle_btn_click() {
+        fn handle_btn_click(&self) {
             debug!("HeOverlayButton<ClocksPage>::clicked");
             let dialog = ClockLocations::new(&Window::default());
+
+            let _self = self.clocks.clone();
+            dialog.connect_location_added(move |_, loc| {
+                _self.append(&loc);
+                ClockStore::default().serialise_clocks(_self.clone());
+            });
+
             dialog.present();
         }
 

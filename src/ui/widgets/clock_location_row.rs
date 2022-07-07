@@ -4,7 +4,7 @@ use gettextrs::ngettext;
 use gtk::{
     glib::{wrapper, Object},
     subclass::prelude::*,
-    Accessible, Actionable, Buildable, ConstraintTarget, Widget,
+    ListBoxRow, Widget,
 };
 use gweather::{Location, LocationLevel};
 
@@ -58,7 +58,6 @@ mod imp {
         }
     }
 
-    impl ListBoxRowImpl for ClockLocationRow {}
     impl ObjectImpl for ClockLocationRow {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
@@ -126,12 +125,12 @@ mod imp {
         }
     }
     impl WidgetImpl for ClockLocationRow {}
+    impl ListBoxRowImpl for ClockLocationRow {}
 }
 
 wrapper! {
     pub struct ClockLocationRow(ObjectSubclass<imp::ClockLocationRow>)
-        @extends Widget,
-        @implements Accessible, Buildable, ConstraintTarget, Actionable;
+        @extends Widget, ListBoxRow;
 }
 
 impl ClockLocationRow {
@@ -147,6 +146,12 @@ impl ClockLocationRow {
         .expect("Failed to create ClockLocationRow");
         obj.imp().location.replace(loc);
         obj
+    }
+
+    pub fn location(&self) -> Location {
+        let loc = self.imp().location.replace(Location::world().unwrap());
+        self.imp().location.replace(loc.clone());
+        return loc;
     }
 
     fn get_state_name(loc: Location) -> Option<String> {
