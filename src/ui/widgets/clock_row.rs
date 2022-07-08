@@ -1,6 +1,5 @@
-use chrono::{Local, Offset, TimeZone, Utc};
+use chrono::{Offset, TimeZone, Utc};
 use chrono_tz::Tz;
-use gettextrs::ngettext;
 use gtk::{
     glib::{self, Object},
     subclass::prelude::*,
@@ -188,8 +187,11 @@ impl ClockRow {
             loc.name().unwrap().to_string(),
             format!("{}", Self::state_name(loc.clone()).unwrap_or(String::new())),
             format!(
-                ", {}",
-                &loc.clone().country_name().map(|v| String::from(v)).unwrap()
+                "{}",
+                &loc.clone()
+                    .country_name()
+                    .map(|v| String::from(format!(", {}", v)))
+                    .unwrap_or(String::from(""))
             )
         );
     }
@@ -197,36 +199,26 @@ impl ClockRow {
     fn parse_clock_desc(loc: Location) -> String {
         let tz: Tz = loc.timezone().unwrap().identifier().parse().unwrap();
 
-        // Get timezone difference
         let local = chrono::Duration::seconds(
-            (Local::now().offset().utc_minus_local()
-                - Utc::now()
-                    .with_timezone(&tz)
-                    .offset()
-                    .fix()
-                    .utc_minus_local())
+            (Utc::now()
+                .with_timezone(&tz)
+                .offset()
+                .fix()
+                .local_minus_utc())
             .into(),
         )
         .num_hours();
 
-        let mut message = String::from("Current timezone");
+        let mut identifier = String::from("");
 
         if local > 0 {
-            message = ngettext!(
-                "{} hour earlier",
-                "{} hours earlier",
-                local.clone().try_into().unwrap(),
-                local.clone().abs()
-            );
+            identifier = format!("+{}", local);
+        } else if local == 0 {
+            identifier = String::from("");
         } else if local < 0 {
-            message = ngettext!(
-                "{} hour later",
-                "{} hours later",
-                local.clone().abs().try_into().unwrap(),
-                local.clone().abs()
-            );
+            identifier = local.to_string();
         }
 
-        return format!("{} • {}", &tz.to_string(), message.clone());
+        return format!("UTC{}", identifier);
     }
 }

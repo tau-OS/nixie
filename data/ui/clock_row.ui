@@ -50,6 +50,7 @@
             <style>
               <class name="suggested-action" />
               <class name="cb-title" />
+              <class name="numeric" />
             </style>
           </object>
         </child>
