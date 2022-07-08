@@ -120,8 +120,7 @@ mod imp {
             });
 
             self.list.bind_model(Some(&self.clocks), move |loc| {
-                let row = ClockRow::new();
-                row.setup_row(loc.downcast_ref::<Location>().unwrap().to_owned());
+                let row = ClockRow::new(loc.downcast_ref::<Location>().unwrap().to_owned());
                 return row.upcast_ref::<Widget>().to_owned();
             });
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="NixieClockRow" parent="GtkListBoxRow">
+    <child>
+      <object class="GtkBox">
+        <property name="valign">center</property>
+        <property name="hexpand">False</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="valign">center</property>
+            <property name="hexpand">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" bind-source="NixieClockRow" bind-property="clock-name" bind-flags="sync-create" />
+                <property name="ellipsize">end</property>
+                <property name="xalign">0</property>
+                <property name="yalign">1</property>
+                <style>
+                  <class name="cb-subtitle" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" bind-source="NixieClockRow" bind-property="clock-desc" bind-flags="sync-create" />
+                <property name="xalign">0</property>
+                <property name="yalign">1</property>
+                <style>
+                  <class name="body" />
+                  <class name="dim-label" />
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="time_label">
+            <property name="hexpand">True</property>
+            <property name="ellipsize">end</property>
+            <property name="xalign">0</property>
+            <property name="yalign">0</property>
+            <property name="halign">end</property>
+            <property name="valign">center</property>
+            <style>
+              <class name="suggested-action" />
+              <class name="cb-title" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
