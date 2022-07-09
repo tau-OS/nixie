@@ -34,9 +34,7 @@
               <object class="GtkStackPage">
                 <property name="title">Alarms</property>
                 <property name="child">
-                  <object class="HeEmptyPage">
-                    <property name="title">Empty lol</property>
-                  </object>
+                  <object class="NixieAlarmsPage"></object>
                 </property>
               </object>
             </child>

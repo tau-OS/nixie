@@ -3,6 +3,7 @@
     <gresource prefix="/co/tauos/Nixie/">
         <file alias="clocks.ui">ui/clocks.ui</file>
         <file alias="stopwatch.ui">ui/stopwatch.ui</file>
+        <file alias="alarms.ui">ui/alarms.ui</file>
         <file alias="stopwatch_laps.ui">ui/stopwatch_laps.ui</file>
         <file alias="clock_locations.ui">ui/clock_locations.ui</file>
         <file alias="clock_location_row.ui">ui/clock_location_row.ui</file>
@@ -11,4 +12,9 @@
         <file>style.css</file>
         <file>style-dark.css</file>
     </gresource>
+
+    <gresource prefix="/co/tauos/Nixie/icons">
+      <file alias="scalable/actions/alarm-centered-symbolic.svg">ui/icons/alarm-centered-symbolic.svg</file>
+      <file alias="scalable/actions/globe-centered-symbolic.svg">ui/icons/globe-centered-symbolic.svg</file>
+  </gresource>
 </gresources>
