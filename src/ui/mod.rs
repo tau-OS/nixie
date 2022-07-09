@@ -1,5 +1,6 @@
 pub mod clocks;
 pub mod stopwatch;
+pub mod alarms;
 
 pub mod widgets {
     pub mod clock_location_row;
