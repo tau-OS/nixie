@@ -1,3 +1,6 @@
 [submodule "libhelium-rs"]
 	path = libhelium-rs
 	url = git@github.com:ItsJamie9494/libhelium-rs.git
+[submodule "libadwaita-rs"]
+	path = libadwaita-rs
+	url = https://gitlab.gnome.org/World/Rust/libadwaita-rs.git

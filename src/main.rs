@@ -9,6 +9,7 @@ mod ui;
 mod window;
 mod clock_store;
 
+use adw::init;
 use config::RESOURCES_FILE;
 use gettextrs::gettext;
 use gtk::{gio, glib::set_application_name};
@@ -27,6 +28,8 @@ fn main() {
 
     let res = gio::Resource::load(RESOURCES_FILE).expect("Could not load gresource file");
     gio::resources_register(&res);
+
+    init();
 
     let app = Application::new();
     app.run();
