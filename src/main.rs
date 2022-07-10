@@ -8,6 +8,7 @@ mod lap;
 mod ui;
 mod window;
 mod clock_store;
+mod duration;
 
 use config::RESOURCES_FILE;
 use gettextrs::gettext;
