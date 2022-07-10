@@ -4,7 +4,6 @@
     <property name="title" translatable="yes">Configure Alarm</property>
     <property name="modal">True</property>
     <property name="default_width">400</property>
-    <property name="default_height">540</property>
     <property name="destroy_with_parent">True</property>
     <child>
       <object class="GtkBox">
