@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="NixieAlarmSetup" parent="HeWindow">
+    <property name="title" translatable="yes">Configure Alarm</property>
+    <property name="modal">True</property>
+    <property name="default_width">400</property>
+    <property name="default_height">540</property>
+    <property name="destroy_with_parent">True</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="HeAppBar" id="bar">
+            <property name="flat">true</property>
+            <property name="show_back">false</property>
+            <property name="show_buttons">true</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <property name="margin-top">18</property>
+            <property name="margin-bottom">18</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <child>
+              <object class="GtkBox" id="time_box">
+                <property name="halign">center</property>
+                <property name="margin-bottom">12</property>
+                <property name="spacing">6</property>
+                <style>
+                  <class name="display" />
+                </style>
+                <child>
+                  <object class="GtkSpinButton" id="h_spinbutton">
+                    <property name="text">0</property>
+                    <property name="xalign">0.5</property>
+                    <property name="orientation">vertical</property>
+                    <property name="numeric">True</property>
+                    <property name="wrap">True</property>
+                    <property name="width-request">60</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="upper">23</property>
+                        <property name="step_increment">1</property>
+                        <property name="page_increment">10</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">:</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="m_spinbutton">
+                    <property name="text">0</property>
+                    <property name="xalign">0.5</property>
+                    <property name="orientation">vertical</property>
+                    <property name="numeric">True</property>
+                    <property name="wrap">True</property>
+                    <property name="width-request">60</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment">
+                        <property name="upper">59</property>
+                        <property name="step_increment">1</property>
+                        <property name="page_increment">10</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListBox">
+                <property name="selection_mode">none</property>
+                <child>
+                  <object class="AdwComboRow" id="ring_duration">
+                    <property name="activatable">False</property>
+                    <property name="selectable">False</property>
+                    <property name="title" translatable="yes">Ring Duration</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwComboRow" id="snooze_duration">
+                    <property name="activatable">False</property>
+                    <property name="selectable">False</property>
+                    <property name="title" translatable="yes">Snooze Duration</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="boxed-list" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="halign">end</property>
+                <child>
+                  <object class="HeFillButton">
+                    <property name="color">purple</property>
+                    <property name="label">Add Alarm</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

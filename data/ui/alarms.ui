@@ -6,6 +6,7 @@
         <property name="hexpand">true</property>
         <child type="overlay">
           <object class="HeOverlayButton" id="btn">
+            <signal name="clicked" handler="handle_btn_click" swapped="true" />
             <property name="icon">list-add-symbolic</property>
             <property name="alignment">right</property>
             <property name="size">small</property>
