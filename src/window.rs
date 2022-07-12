@@ -14,7 +14,7 @@ mod imp {
     use he::{prelude::*, subclass::prelude::*, ApplicationWindow};
     use log::debug;
 
-    use crate::ui::{clocks::ClocksPage, stopwatch::StopwatchPage, alarms::AlarmsPage};
+    use crate::{ui::{clocks::ClocksPage, stopwatch::StopwatchPage, alarms::AlarmsPage}, config::APP_ID};
 
     #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/window.ui")]
@@ -47,7 +47,13 @@ mod imp {
 
     impl HeApplicationWindowImpl for Window {}
     impl ApplicationWindowImpl for Window {}
-    impl WindowImpl for Window {}
+    impl WindowImpl for Window {
+        fn close_request(&self, window: &Self::Type) -> gtk::Inhibit {
+            // Pass close request on to the parent
+            self.parent_close_request(window)
+        }
+
+    }
     impl ObjectImpl for Window {
         fn constructed(&self, obj: &Self::Type) {
             self.parent_constructed(obj);
@@ -55,6 +61,10 @@ mod imp {
             obj.connect_realize(move |_| {
                 debug!("HeWindow<Window>::realize");
             });
+
+            if APP_ID.ends_with("Devel") {
+                obj.add_css_class("devel");
+            }
         }
     }
     impl WidgetImpl for Window {}
