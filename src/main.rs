@@ -1,6 +1,7 @@
 extern crate pretty_env_logger;
 extern crate stopwatch;
 
+mod alarm;
 mod application;
 mod clock;
 mod clock_store;

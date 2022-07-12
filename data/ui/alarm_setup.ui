@@ -33,7 +33,7 @@
                 </style>
                 <child>
                   <object class="GtkSpinButton" id="h_spinbutton">
-                    <property name="text">0</property>
+                    <property name="value" bind-source="NixieAlarmSetup" bind-property="alarm-hour" bind-flags="sync-create" />
                     <property name="xalign">0.5</property>
                     <property name="orientation">vertical</property>
                     <property name="numeric">True</property>
@@ -55,7 +55,7 @@
                 </child>
                 <child>
                   <object class="GtkSpinButton" id="m_spinbutton">
-                    <property name="text">0</property>
+                    <property name="value" bind-source="NixieAlarmSetup" bind-property="alarm-minute" bind-flags="sync-create" />
                     <property name="xalign">0.5</property>
                     <property name="orientation">vertical</property>
                     <property name="numeric">True</property>
@@ -109,7 +109,13 @@
                   <object class="HeMiniContentBlock">
                     <property name="title" translatable="yes">Alarm Label</property>
                     <child>
-                      <object class="GtkEntry" id="alarm_label_entry"></object>
+                      <object class="GtkEntry" id="alarm_label_entry">
+                        <property name="buffer">
+                          <object class="GtkEntryBuffer">
+                            <property name="text" bind-source="NixieAlarmSetup" bind-property="alarm-name" bind-flags="sync-create" />
+                          </object>
+                        </property>
+                      </object>
                     </child>
                   </object>
                 </child>
@@ -117,7 +123,9 @@
                   <object class="HeMiniContentBlock">
                     <property name="title" translatable="yes">Alarm Ringer</property>
                     <child>
-                      <object class="GtkSwitch" id="alarm_ringer_switch"></object>
+                      <object class="GtkSwitch" id="alarm_ringer_switch">
+                        <property name="state" bind-source="NixieAlarmSetup" bind-property="alarm-ring" bind-flags="sync-create" />
+                      </object>
                     </child>
                   </object>
                 </child>

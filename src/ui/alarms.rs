@@ -24,7 +24,7 @@ mod imp {
         #[template_callback]
         fn handle_btn_click(&self) {
             debug!("HeOverlayButton<AlarmsPage>::clicked");
-            let dialog = AlarmSetup::new(&Window::default());
+            let dialog = AlarmSetup::new(&Window::default(), None);
             dialog.present();
         }
     }

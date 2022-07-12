@@ -7,6 +7,7 @@ pub trait NixieWeekdays {
     fn symbol(&self) -> String;
     fn text(&self, count: u32) -> String;
     fn to_string(&self) -> String;
+    fn into(&self) -> usize;
     fn iterator(&self) -> Iter<'static, Self>
     where
         Self: Sized;
@@ -39,6 +40,25 @@ impl NixieWeekdays for Weekday {
 
     fn to_string(&self) -> String {
         format!("{:?}", self)
+    }
+
+    fn into(&self) -> usize {
+        static WEEKDAYS: [Weekday; 7] = [
+            Weekday::Mon,
+            Weekday::Tue,
+            Weekday::Wed,
+            Weekday::Thu,
+            Weekday::Fri,
+            Weekday::Sat,
+            Weekday::Sun,
+        ];
+
+        WEEKDAYS
+            .iter()
+            .position(|&r| r == *self)
+            .unwrap()
+            .try_into()
+            .unwrap()
     }
 
     fn iterator(&self) -> Iter<'static, Weekday>
