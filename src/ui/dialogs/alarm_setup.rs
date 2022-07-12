@@ -1,9 +1,11 @@
 mod imp {
+    use crate::weekday::NixieWeekdays;
+    use chrono::{Datelike, Local};
     use gtk::{
         glib::{self, subclass::InitializingObject},
         prelude::InitializingWidgetExt,
         subclass::prelude::*,
-        CompositeTemplate, Switch, Entry,
+        Align, Box, CompositeTemplate, Entry, Switch, ToggleButton,
     };
     use he::{prelude::*, subclass::prelude::*, Window};
     use log::debug;
@@ -15,6 +17,25 @@ mod imp {
         pub alarm_label_entry: TemplateChild<Entry>,
         #[template_child]
         pub alarm_ringer_switch: TemplateChild<Switch>,
+        #[template_child]
+        pub repeat_box: TemplateChild<Box>,
+    }
+
+    impl AlarmSetup {
+        fn setup_repeats(&self) {
+            let weekday = Local::now().weekday();
+
+            for day in weekday.iterator() {
+                let btn = ToggleButton::builder()
+                    .label(&day.symbol())
+                    .tooltip_text(&day.text(0))
+                    .css_classes(vec!["circular".to_string()])
+                    .halign(Align::Start)
+                    .build();
+
+                self.repeat_box.append(&btn);
+            }
+        }
     }
 
     #[glib::object_subclass]
@@ -41,6 +62,8 @@ mod imp {
             obj.connect_realize(move |_| {
                 debug!("HeWindow<AlarmSetup>::realize");
             });
+
+            self.setup_repeats();
         }
     }
     impl WidgetImpl for AlarmSetup {}

@@ -8,6 +8,7 @@ mod config;
 mod lap;
 mod macros;
 mod ui;
+mod weekday;
 mod window;
 
 use config::RESOURCES_FILE;

@@ -76,6 +76,36 @@
               <object class="GtkListBox">
                 <property name="selection_mode">none</property>
                 <child>
+                  <object class="GtkListBoxRow">
+                    <property name="activatable">false</property>
+                    <property name="selectable">false</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="spacing">9</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkLabel" id="repeat_label">
+                            <property name="halign">start</property>
+                            <property name="label">Repeat</property>
+                            <property name="use-underline">True</property>
+                            <property name="hexpand">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="repeat_box">
+                            <property name="valign">center</property>
+                            <property name="spacing">10</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
                   <object class="HeMiniContentBlock">
                     <property name="title" translatable="yes">Alarm Label</property>
                     <child>
