@@ -76,17 +76,19 @@
               <object class="GtkListBox">
                 <property name="selection_mode">none</property>
                 <child>
-                  <object class="AdwComboRow" id="ring_duration">
-                    <property name="activatable">False</property>
-                    <property name="selectable">False</property>
-                    <property name="title" translatable="yes">Ring Duration</property>
+                  <object class="HeMiniContentBlock">
+                    <property name="title" translatable="yes">Alarm Label</property>
+                    <child>
+                      <object class="GtkEntry" id="alarm_label_entry"></object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwComboRow" id="snooze_duration">
-                    <property name="activatable">False</property>
-                    <property name="selectable">False</property>
-                    <property name="title" translatable="yes">Snooze Duration</property>
+                  <object class="HeMiniContentBlock">
+                    <property name="title" translatable="yes">Alarm Ringer</property>
+                    <child>
+                      <object class="GtkSwitch" id="alarm_ringer_switch"></object>
+                    </child>
                   </object>
                 </child>
                 <style>

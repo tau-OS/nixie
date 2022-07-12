@@ -30,11 +30,6 @@ version = "0.5"
 package = "libhelium"
 path = "./libhelium-rs"
 
-# Needed for some missing LibHe components
-[dependencies.adw]
-package = "libadwaita"
-path = "./libadwaita-rs/libadwaita"
-
 [dependencies.gweather]
 package = "libgweather"
 git = "https://github.com/ItsJamie9494/libgweather-rs"

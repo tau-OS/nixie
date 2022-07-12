@@ -13,7 +13,6 @@ use he::{AboutWindow, AboutWindowLicenses};
 use log::info;
 
 mod imp {
-    use adw::init;
     use gtk::{
         gio::Settings,
         glib,
@@ -62,8 +61,6 @@ mod imp {
         fn startup(&self, app: &Self::Type) {
             debug!("HeApplication<Application>::startup");
             self.parent_startup(app);
-
-            init();
         }
     }
     impl GtkApplicationImpl for Application {}

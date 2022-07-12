@@ -1,23 +1,20 @@
 mod imp {
-    use adw::{traits::ComboRowExt, ComboRow};
     use gtk::{
         glib::{self, subclass::InitializingObject},
         prelude::InitializingWidgetExt,
         subclass::prelude::*,
-        CompositeTemplate,
+        CompositeTemplate, Switch, Entry,
     };
     use he::{prelude::*, subclass::prelude::*, Window};
     use log::debug;
-
-    use crate::duration::Duration;
 
     #[derive(Default, CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/alarm_setup.ui")]
     pub struct AlarmSetup {
         #[template_child]
-        pub ring_duration: TemplateChild<ComboRow>,
+        pub alarm_label_entry: TemplateChild<Entry>,
         #[template_child]
-        pub snooze_duration: TemplateChild<ComboRow>,
+        pub alarm_ringer_switch: TemplateChild<Switch>,
     }
 
     #[glib::object_subclass]
@@ -44,11 +41,6 @@ mod imp {
             obj.connect_realize(move |_| {
                 debug!("HeWindow<AlarmSetup>::realize");
             });
-
-            self.ring_duration.set_factory(Some(&Duration::factory()));
-            self.ring_duration.set_model(Some(&Duration::model()));
-            self.snooze_duration.set_factory(Some(&Duration::factory()));
-            self.snooze_duration.set_model(Some(&Duration::model()));
         }
     }
     impl WidgetImpl for AlarmSetup {}
