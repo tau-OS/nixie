@@ -1,7 +1,7 @@
 use crate::{
     action,
     config::{APP_ID, PROFILE, VERSION},
-    window::Window,
+    window::Window, clock::InternalClock,
 };
 use gtk::{
     gio::{self, ApplicationFlags, Settings},
@@ -22,14 +22,18 @@ mod imp {
     use he::subclass::prelude::*;
     use log::debug;
 
+    use crate::clock::InternalClock;
+
     pub struct Application {
         pub settings: Settings,
+        pub clock: InternalClock,
     }
 
     impl Default for Application {
         fn default() -> Self {
             Self {
                 settings: Settings::new("co.tauos.Nixie"),
+                clock: InternalClock::new()
             }
         }
     }
@@ -101,6 +105,10 @@ impl Application {
 
     pub fn settings(&self) -> Settings {
         self.imp().settings.clone()
+    }
+
+    pub fn clock(&self) -> InternalClock {
+        self.imp().clock.clone()
     }
 
     fn create_window(&self) -> Window {

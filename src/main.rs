@@ -1,13 +1,14 @@
 extern crate pretty_env_logger;
 extern crate stopwatch;
 
-mod macros;
 mod application;
+mod clock;
+mod clock_store;
 mod config;
 mod lap;
+mod macros;
 mod ui;
 mod window;
-mod clock_store;
 
 use config::RESOURCES_FILE;
 use gettextrs::gettext;

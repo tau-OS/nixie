@@ -15,8 +15,8 @@ mod imp {
     use chrono_tz::Tz;
     use gtk::{
         glib::{
-            self, clone, once_cell::sync::Lazy, subclass::*, timeout_add_local, ParamFlags,
-            ParamSpec, ParamSpecInt64, ParamSpecString, Value,
+            self, once_cell::sync::Lazy, subclass::*, ParamFlags, ParamSpec, ParamSpecInt64,
+            ParamSpecString, Value,
         },
         subclass::prelude::*,
         CompositeTemplate, Label, ListBoxRow,
@@ -24,6 +24,8 @@ mod imp {
     use gweather::Location;
     use he::prelude::*;
     use log::debug;
+
+    use crate::application::Application;
 
     #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/clock_row.ui")]
@@ -73,17 +75,22 @@ mod imp {
                 debug!("HeMiniContentBlock<ClockRow>::realize");
             });
 
-            timeout_add_local(
-                std::time::Duration::from_millis(1),
-                clone!(@weak obj => @default-return Continue(false), move || {
-                    let tz: Tz = obj.location().timezone().unwrap().identifier().parse().unwrap();
-                    obj.imp().time_label.set_label(&tz.from_utc_datetime(&Utc::now().naive_utc())
-                    .time()
-                    .format("%H:%M:%S %p") // 09:34:02 AM
-                    .to_string());
-                    Continue(true)
-                }),
-            );
+            let _obj = obj.clone();
+            Application::clock(&Application::default()).connect_tick(move |_| {
+                let tz: Tz = _obj
+                    .location()
+                    .timezone()
+                    .unwrap()
+                    .identifier()
+                    .parse()
+                    .unwrap();
+                _obj.imp().time_label.set_label(
+                    &tz.from_utc_datetime(&Utc::now().naive_utc())
+                        .time()
+                        .format("%H:%M:%S %p") // 09:34:02 AM
+                        .to_string(),
+                );
+            });
         }
 
         fn properties() -> &'static [glib::ParamSpec] {
