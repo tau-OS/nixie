@@ -14,7 +14,7 @@ mod imp {
     use chrono::Duration;
     use gtk::{
         gio::ListStore,
-        glib::{self, clone, subclass::InitializingObject, timeout_add_local, Object},
+        glib::{self, subclass::InitializingObject, Object},
         prelude::*,
         subclass::prelude::*,
         template_callbacks, Align, Box, Button, CompositeTemplate, Label, ListBox, Revealer,
@@ -25,7 +25,10 @@ mod imp {
     use std::cell::Cell;
     use stopwatch::Stopwatch;
 
-    use crate::{lap::StopwatchLap, ui::widgets::stopwatch_laps_row::StopwatchLapsRow};
+    use crate::{
+        application::Application, lap::StopwatchLap,
+        ui::widgets::stopwatch_laps_row::StopwatchLapsRow,
+    };
 
     use super::State;
 
@@ -282,18 +285,14 @@ mod imp {
                 }
             });
 
-            // TODO move this into its own Rust object
-            timeout_add_local(
-                std::time::Duration::from_millis(1),
-                clone!(@weak obj => @default-return Continue(false), move || {
-                    match obj.imp().state.get() {
-                        State::Running => obj.imp().update_time(),
-                        State::Reset => obj.imp().update_time(),
-                        _ => {}
-                    }
-                    Continue(true)
-                }),
-            );
+            let _obj = obj.clone();
+            Application::clock(&Application::default()).connect_tick(move |_| {
+                match _obj.imp().state.get() {
+                    State::Running => _obj.imp().update_time(),
+                    State::Reset => _obj.imp().update_time(),
+                    _ => {}
+                }
+            });
 
             obj.connect_realize(move |_| {
                 debug!("GtkBox<StopwatchPage>::realize");
