@@ -1,17 +1,19 @@
 mod imp {
     use crate::{alarm::Alarm, weekday::NixieWeekdays};
-    use chrono::{Datelike, Local, Timelike};
+    use chrono::{Datelike, Local, Timelike, Weekday};
     use gtk::{
+        gio::{SimpleAction, SimpleActionGroup},
         glib::{
             self, once_cell::sync::Lazy, subclass::InitializingObject, ParamFlags, ParamSpec,
-            ParamSpecBoolean, ParamSpecString, ParamSpecUInt, Value,
+            ParamSpecBoolean, ParamSpecString, ParamSpecUInt, Value, VariantTy,
         },
-        prelude::InitializingWidgetExt,
+        prelude::*,
         subclass::prelude::*,
         Align, Box, CompositeTemplate, Entry, Switch, ToggleButton,
     };
-    use he::{prelude::*, subclass::prelude::*, Window};
+    use he::{subclass::prelude::*, Window};
     use log::debug;
+    use std::sync::{Arc, Mutex};
 
     #[derive(Default, CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/alarm_setup.ui")]
@@ -24,22 +26,57 @@ mod imp {
         pub repeat_box: TemplateChild<Box>,
 
         pub alarm: Alarm,
+        pub active_repeats: Arc<Mutex<Vec<Weekday>>>,
     }
 
     impl AlarmSetup {
         fn setup_repeats(&self) {
             let weekday = Local::now().weekday();
 
+            let ag = SimpleActionGroup::new();
+            let action = SimpleAction::new_stateful(
+                "day",
+                Some(VariantTy::UINT64),
+                &None::<u64>.to_variant(),
+            );
+
             for day in weekday.iterator() {
+                let day_int = day.num_days_from_monday() as u64;
+
                 let btn = ToggleButton::builder()
                     .label(&day.symbol())
                     .tooltip_text(&day.text(0))
                     .css_classes(vec!["circular".to_string()])
                     .halign(Align::Start)
+                    .action_name("repeats.day")
+                    .action_target(&day_int.to_variant())
                     .build();
+
+                btn.connect_clicked(|obj| {
+                    obj.set_active(!obj.is_active());
+                });
 
                 self.repeat_box.append(&btn);
             }
+
+            let obj = self.active_repeats.to_owned();
+            action.connect_activate(move |_, value| {
+                let day = Weekday::from_u64(value.unwrap().get::<u64>().unwrap()).unwrap();
+
+                let mut active_repeats = obj.lock().unwrap();
+                let item = active_repeats.iter().find(|s| **s == day);
+                let item_pos;
+                if item.is_none() {
+                    active_repeats.push(day);
+                } else {
+                    item_pos = active_repeats.iter().position(|&r| r == day);
+                    active_repeats.remove(item_pos.unwrap());
+                }
+            });
+
+            ag.add_action(&action);
+
+            self.repeat_box.insert_action_group("repeats", Some(&ag));
         }
     }
 

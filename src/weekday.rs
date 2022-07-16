@@ -2,15 +2,31 @@ use std::slice::Iter;
 
 use chrono::Weekday;
 use gettextrs::ngettext;
+use gtk::glib::{ToVariant, Variant};
 
 pub trait NixieWeekdays {
     fn symbol(&self) -> String;
     fn text(&self, count: u32) -> String;
     fn to_string(&self) -> String;
     fn into(&self) -> usize;
+    fn from_u64(n: u64) -> Option<Weekday> {
+        match n {
+            0 => Some(Weekday::Mon),
+            1 => Some(Weekday::Tue),
+            2 => Some(Weekday::Wed),
+            3 => Some(Weekday::Thu),
+            4 => Some(Weekday::Fri),
+            5 => Some(Weekday::Sat),
+            6 => Some(Weekday::Sun),
+            _ => None,
+        }
+    }
     fn iterator(&self) -> Iter<'static, Self>
     where
         Self: Sized;
+    fn to_variant(&self) -> Variant {
+        return (self.into() as u64).to_variant();
+    }
 }
 
 impl NixieWeekdays for Weekday {
