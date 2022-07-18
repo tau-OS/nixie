@@ -118,8 +118,8 @@ impl Application {
     }
 
     fn setup_accels(&self) {
-        self.set_accels_for_action("app.quit", &["<primary>q"]);
-        self.set_accels_for_action("app.about", &["<primary>a"]);
+        self.set_accels_for_action("app.quit", &["<Control>q"]);
+        self.set_accels_for_action("app.about", &["<Control>a"]);
     }
 
     pub fn settings(&self) -> Settings {
@@ -143,15 +143,18 @@ impl Application {
 
     fn show_about(&self) {
         let window = self.active_window().unwrap();
+        let uri = "https://github.com/ItsJamie9494/nixie";
         AboutWindow::builder()
             .transient_for(&window)
             .modal(true)
-            .icon_name(APP_ID)
+            .icon(APP_ID)
             .app_name("Nixie")
             .version(VERSION)
             .developer_names(vec!["Jamie Murphy".into()])
             .copyright_year(2022)
             .license(AboutWindowLicenses::Gplv3)
+            .issue_url(uri)
+            .more_info_url(uri)
             .build()
             .present();
     }
