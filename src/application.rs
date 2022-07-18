@@ -1,7 +1,8 @@
 use crate::{
     action,
+    clock::InternalClock,
     config::{APP_ID, PROFILE, VERSION},
-    window::Window, clock::InternalClock,
+    window::Window,
 };
 use gtk::{
     gio::{self, ApplicationFlags, Settings},
@@ -15,25 +16,28 @@ use log::info;
 mod imp {
     use gtk::{
         gio::Settings,
-        glib,
+        glib::{self, WeakRef},
         subclass::prelude::{ApplicationImplExt, GtkApplicationImpl, ObjectImpl, ObjectSubclass},
     };
     use he::prelude::*;
     use he::subclass::prelude::*;
     use log::debug;
+    use once_cell::sync::OnceCell;
 
-    use crate::clock::InternalClock;
+    use crate::{clock::InternalClock, config::APP_ID, window::Window};
 
     pub struct Application {
         pub settings: Settings,
         pub clock: InternalClock,
+        pub window: OnceCell<WeakRef<Window>>,
     }
 
     impl Default for Application {
         fn default() -> Self {
             Self {
                 settings: Settings::new("co.tauos.Nixie"),
-                clock: InternalClock::new()
+                clock: InternalClock::new(),
+                window: OnceCell::<WeakRef<Window>>::default(),
             }
         }
     }
@@ -45,26 +49,35 @@ mod imp {
         type ParentType = he::Application;
     }
 
-    impl ObjectImpl for Application {
-        fn constructed(&self, obj: &Self::Type) {
-            self.parent_constructed(obj);
-
-            obj.setup_actions();
-
-            obj.set_accels_for_action("app.quit", &["<primary>q"]);
-            obj.set_accels_for_action("app.about", &["<primary>a"]);
-        }
-    }
+    impl ObjectImpl for Application {}
     impl ApplicationImpl for Application {
         fn activate(&self, app: &Self::Type) {
             debug!("HeApplication<Application>::activate");
-            let window = app.create_window();
-            window.present();
+            self.parent_activate(app);
+
+            if let Some(window) = self.window.get() {
+                let window = window.upgrade().unwrap();
+                window.present();
+                return;
+            }
+
+            let window = Window::new(app);
+            self.window
+                .set(window.downgrade())
+                .expect("Window already set.");
+
+            app.main_window().present();
         }
 
         fn startup(&self, app: &Self::Type) {
             debug!("HeApplication<Application>::startup");
             self.parent_startup(app);
+
+            // Set icons for shell
+            gtk::Window::set_default_icon_name(APP_ID);
+
+            app.setup_actions();
+            app.setup_accels();
         }
     }
     impl GtkApplicationImpl for Application {}
@@ -82,6 +95,7 @@ impl Application {
         glib::Object::new(&[
             ("application-id", &Some("co.tauos.Nixie")),
             ("flags", &ApplicationFlags::default()),
+            ("resource-base-path", &Some("/co/tauos/Buds/")),
         ])
         .expect("Failed to create Application")
     }
@@ -103,6 +117,11 @@ impl Application {
         )
     }
 
+    fn setup_accels(&self) {
+        self.set_accels_for_action("app.quit", &["<primary>q"]);
+        self.set_accels_for_action("app.about", &["<primary>a"]);
+    }
+
     pub fn settings(&self) -> Settings {
         self.imp().settings.clone()
     }
@@ -111,8 +130,8 @@ impl Application {
         self.imp().clock.clone()
     }
 
-    fn create_window(&self) -> Window {
-        Window::new(&self.clone())
+    pub fn main_window(&self) -> Window {
+        self.imp().window.get().unwrap().upgrade().unwrap()
     }
 
     pub fn run(&self) {

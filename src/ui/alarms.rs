@@ -2,12 +2,12 @@ mod imp {
     use gtk::{
         glib::{self, subclass::InitializingObject},
         subclass::prelude::*,
-        CompositeTemplate, template_callbacks,
+        template_callbacks, CompositeTemplate,
     };
     use he::prelude::*;
     use log::debug;
 
-    use crate::{ui::dialogs::alarm_setup::AlarmSetup, window::Window};
+    use crate::{application::Application, ui::dialogs::alarm_setup::AlarmSetup};
 
     #[derive(CompositeTemplate)]
     #[template(resource = "/co/tauos/Nixie/alarms.ui")]
@@ -24,7 +24,7 @@ mod imp {
         #[template_callback]
         fn handle_btn_click(&self) {
             debug!("HeOverlayButton<AlarmsPage>::clicked");
-            let dialog = AlarmSetup::new(&Window::default(), None);
+            let dialog = AlarmSetup::new(&Application::main_window(&Application::default()), None);
             dialog.present();
         }
     }

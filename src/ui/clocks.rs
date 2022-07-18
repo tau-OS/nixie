@@ -11,9 +11,9 @@ mod imp {
     use log::debug;
 
     use crate::{
+        application::Application,
         clock_store::ClockStore,
         ui::{dialogs::clock_locations::ClockLocations, widgets::clock_row::ClockRow},
-        window::Window,
     };
 
     #[derive(CompositeTemplate)]
@@ -48,7 +48,7 @@ mod imp {
         #[template_callback]
         fn handle_btn_click(&self) {
             debug!("HeOverlayButton<ClocksPage>::clicked");
-            let dialog = ClockLocations::new(&Window::default());
+            let dialog = ClockLocations::new(&Application::main_window(&Application::default()));
 
             let _self = self.clocks.clone();
             dialog.connect_location_added(move |_, loc| {

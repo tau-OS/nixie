@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
-    <schema id="co.tauos.Nixie" path="/co/tauos/Nixie/">
-        <key name="clocks" type="av">
-            <default>[]</default>
-            <summary>Configured World Clocks</summary>
-            <description>
-                List of World Clocks
-            </description>
-        </key>
-    </schema>
+  <schema id="co.tauos.Nixie" path="/co/tauos/Nixie/">
+    <key name="window-width" type="i">
+      <default>600</default>
+      <summary>Window width</summary>
+    </key>
+    <key name="window-height" type="i">
+      <default>400</default>
+      <summary>Window height</summary>
+    </key>
+    <key name="is-maximized" type="b">
+      <default>false</default>
+      <summary>Window maximized state</summary>
+    </key>
+    <key name="clocks" type="av">
+      <default>[]</default>
+      <summary>Configured World Clocks</summary>
+      <description>
+        List of World Clocks
+      </description>
+    </key>
+  </schema>
 </schemalist>
