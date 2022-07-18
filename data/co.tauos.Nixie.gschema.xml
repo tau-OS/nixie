@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <schemalist>
-  <schema id="co.tauos.Nixie" path="/co/tauos/Nixie/">
+  <schema path="/co/tauos/Nixie/" id="co.tauos.Nixie" gettext-domain="buds">
     <key name="window-width" type="i">
       <default>600</default>
       <summary>Window width</summary>
