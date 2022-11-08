@@ -1,4 +1,4 @@
-<!-- <img align="left" style="vertical-align: middle" width="120" height="120" src="data/icons/color.svg"> -->
+<!-- <img align="left" style="vertical-align: middle" width="120" height="120" src="data/icons/128/co.tauos.Nixie.svg"> -->
 
 # Nixie
 
@@ -15,29 +15,6 @@ You'll need the following dependencies:
 
 > _Note_: This dependency list is the names searched for by `pkg-config`. Depending on your distribution, you may need to install other packages (for example, `gtk4-devel` on Fedora)
 
-- `rustc`
+- `valac`
 - `gtk4`
 - `libhelium-1`
-
-## 🏗️ Building
-
-Simply clone this repo, then run `cargo build` to configure the build environment.
-
-```bash
-$ cargo build
-```
-
-For debug messages on the GUI application, set the `G_MESSAGES_DEBUG` environment variable, e.g. to `all`:
-
-```bash
-G_MESSAGES_DEBUG=all cargo run
-```
-
-## 📦 Installing
-
-To install, use `cargo install --path .`, then execute with `nixie`.
-
-```bash
-$ cargo install --path .
-$ nixie
-```

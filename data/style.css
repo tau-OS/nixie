@@ -1,24 +1,5 @@
-.running-stopwatch .seconds-label,
-.paused-stopwatch .seconds-label {
-  font-weight: 300;
-}
-.stopped-stopwatch .seconds-label {
-  font-weight: 300;
-}
-.running-stopwatch .seconds-label,
-.running-stopwatch .miliseconds-label {
-  color: @accent_color;
-}
+/* Etc */
 
-.stopped-stopwatch .miliseconds-label,
-.running-stopwatch .miliseconds-label,
-.paused-stopwatch .miliseconds-label {
-  font-size: 50px;
-}
-
-.stopped-stopwatch label,
-.running-stopwatch label,
-.paused-stopwatch label {
-	font-size: 70px;
-	font-weight: lighter;
+.search {
+	border-radius: 999px;
 }

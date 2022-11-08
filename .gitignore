@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 /target
+=======
+build/*
+.flatpak
+>>>>>>> dbe7f6e (Rewrite in Vala)

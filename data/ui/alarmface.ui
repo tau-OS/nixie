@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="NixieAlarmFace" parent="HeBin">
+    <child>
+        <object class="HeOverlayButton" id="alarm_overlay">
+          <property name="vexpand">true</property>
+          <property name="hexpand">true</property>
+          <property name="icon">list-add-symbolic</property>
+          <signal name="clicked" handler="on_new" swapped="no"/>
+          <child>
+            <object class="GtkBox">
+              <property name="orientation">vertical</property>
+              <child>
+                <object class="HeViewTitle">
+                  <property name="label" translatable="true">Alarms</property>
+                </object>
+              </child>
+              <child>
+                <object class="GtkScrolledWindow" id="list_view">
+                  <child>
+                    <object class="GtkBox">
+                      <child>
+                        <object class="GtkListBox" id="listbox">
+                          <property name="valign">start</property>
+                          <property name="hexpand">1</property>
+                          <property name="vexpand">1</property>
+                          <property name="selection-mode">none</property>
+                          <property name="activate-on-single-click">1</property>
+                          <property name="margin-top">18</property>
+                          <property name="margin-bottom">18</property>
+                          <property name="margin-start">12</property>
+                          <property name="margin-end">12</property>
+                          <style>
+                            <class name="content-list"/>
+                          </style>
+                        </object>
+                      </child>
+                    </object>
+                  </child>
+                </object>
+              </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

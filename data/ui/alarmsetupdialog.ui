@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="NixieAlarmSetupDialog" parent="HeWindow">
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="default-width">415</property>
+    <property name="default-height">400</property>
+    <property name="title" translatable="yes">New Alarm</property>
+    <child>
+      <object class="GtkBox">
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <property name="margin-top">18</property>
+        <property name="margin-bottom">18</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <child>
+          <object class="GtkBox" id="time_box">
+            <property name="halign">center</property>
+            <property name="margin-bottom">12</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkSpinButton" id="h_spinbutton">
+                <property name="text">0</property>
+                <property name="xalign">0.5</property>
+                <property name="orientation">vertical</property>
+                <property name="numeric">True</property>
+                <property name="wrap">True</property>
+                <property name="width-request">60</property>
+                <style>
+                  <class name="display"/>
+                </style>
+                <signal name="changed" handler="spinbuttons_changed" object="NixieAlarmSetupDialog" swapped="no"/>
+                <signal name="output" handler="show_leading_zeros"/>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="upper">23</property>
+                    <property name="step_increment">1</property>
+                    <property name="page_increment">10</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <style>
+                  <class name="display"/>
+                </style>
+                <property name="label">∶</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="m_spinbutton">
+                <property name="text">0</property>
+                <property name="xalign">0.5</property>
+                <property name="orientation">vertical</property>
+                <property name="numeric">True</property>
+                <property name="wrap">True</property>
+                <property name="width-request">60</property>
+                <style>
+                  <class name="display"/>
+                </style>
+                <signal name="output" handler="show_leading_zeros"/>
+                <signal name="changed" handler="spinbuttons_changed"/>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="upper">59</property>
+                    <property name="step_increment">1</property>
+                    <property name="page_increment">10</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkListBox" id="listbox">
+            <property name="selection_mode">none</property>
+            <child>
+              <object class="NixieAlarmDayPickerRow" id="repeats">
+                <signal name="days_changed" handler="days_changed" swapped="no" />
+              </object>
+            </child>
+            <child>
+              <object class="HeMiniContentBlock">
+                <property name="title" translatable="yes">Name</property>
+                <child>
+                  <object class="GtkEntry" id="name_entry">
+                    <signal name="changed" handler="entry_changed" object="NixieAlarmSetupDialog" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <style>
+              <class name="content-list"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="label_revealer">
+            <child>
+              <object class="GtkLabel" id="warn_label">
+                <property name="label" translatable="yes">You already have an alarm for this time.</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <property name="halign">center</property>
+            <child>
+              <object class="HePillButton" id="delete_button">
+                <property name="label" translatable="yes">Remove Alarm</property>
+                <property name="halign">center</property>
+                <signal name="clicked" handler="delete" swapped="no" />
+              </object>
+            </child>
+            <child>
+              <object class="HePillButton" id="primary_button">
+                <property name="halign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

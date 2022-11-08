@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <menu id="menu">
+    <item>
+      <attribute name="label" translatable="yes">About Nixie</attribute>
+      <attribute name="action">win.action_about</attribute>
+    </item>
+  </menu>
+</interface>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="NixieMainWindow" parent="HeApplicationWindow">
+    <property name="default-width">500</property>
+    <property name="default-height">600</property>
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="HeNavigationRail">
+            <property name="width-request">120</property>
+            <property name="stack">stack</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="orientation">vertical</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="main_box">
+            <property name="orientation">vertical</property>
+            <property name="hexpand">1</property>
+            <child>
+              <object class="HeAppBar">
+                <property name="flat">1</property>
+                <property name="show-buttons">1</property>
+                <property name="show-back">0</property>
+                <child>
+                  <object class="GtkMenuButton" id="menu_button">
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="menu-model">menu</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkWindowHandle">
+                <property name="vexpand">true</property>
+                <child>
+                  <object class="GtkStack" id="stack">
+                    <property name="transition_type">crossfade</property>
+                    <property name="vhomogeneous">true</property>
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">clocks</property>
+                        <property name="title">Clocks</property>
+                        <property name="icon-name">org.gnome.clocks-symbolic</property>
+                        <property name="child">
+                          <object class="NixieWorldFace" id="world">
+                            <property name="win">NixieMainWindow</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">alarms</property>
+                        <property name="title">Alarms</property>
+                        <property name="icon-name">alarm-symbolic</property>
+                        <property name="child">
+                          <object class="NixieAlarmFace" id="alarm">
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">timer</property>
+                        <property name="title">Timer</property>
+                        <property name="icon-name">timer-symbolic</property>
+                        <property name="child">
+                          <object class="NixieTimerFace" id="timer">
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">stopwatch</property>
+                        <property name="title">Stopwatch</property>
+                        <property name="icon-name">stopwatch-symbolic</property>
+                        <property name="child">
+                          <object class="NixieStopwatchFace" id="sw">
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

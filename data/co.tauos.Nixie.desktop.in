@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Nixie
+Comment=Get the Time
+Exec=co.tauos.Nixie
+Icon=co.tauos.Nixie
+Keywords=clock;timer;stopwatch;alarm
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=GTK;Utility;
+DBusActivatable=true
+X-Geoclue-Reason=Set shown world clocks.

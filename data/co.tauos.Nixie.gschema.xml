@@ -1,23 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema path="/co/tauos/Nixie/" id="co.tauos.Nixie" gettext-domain="buds">
-    <key name="window-width" type="i">
-      <default>600</default>
-      <summary>Window width</summary>
-    </key>
-    <key name="window-height" type="i">
-      <default>400</default>
-      <summary>Window height</summary>
-    </key>
-    <key name="is-maximized" type="b">
-      <default>false</default>
-      <summary>Window maximized state</summary>
-    </key>
-    <key name="clocks" type="av">
+  <schema path="/co/tauos/Nixie/" id="co.tauos.Nixie" gettext-domain="co.tauos.Nixie">
+    <key name="clocks" type="aa{sv}">
       <default>[]</default>
-      <summary>Configured World Clocks</summary>
+      <summary>Configured world clocks</summary>
       <description>
-        List of World Clocks
+        List of world clocks to show.
+      </description>
+    </key>
+    <key name="alarms" type="aa{sv}">
+      <default>[]</default>
+      <summary>Configured alarms</summary>
+      <description>
+        List of alarms set.
+      </description>
+    </key>
+    <key name="timers" type="aa{sv}">
+      <default>[]</default>
+      <summary>Configured Timers</summary>
+      <description>
+      List of timers set.
+      </description>
+    </key>
+    <key name="geolocation" type="b">
+      <default>true</default>
+      <summary>Geolocation support</summary>
+      <description>
+        Turn geolocation support on and off.
       </description>
     </key>
   </schema>
