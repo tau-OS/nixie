@@ -32,6 +32,7 @@
                       <object class="HePillButton" id="start_button">
                         <property name="halign">center</property>
                         <property name="valign">center</property>
+                        <property name="width_request">44</property>
                         <property name="icon">media-playback-start-symbolic</property>
                       </object>
                     </child>
