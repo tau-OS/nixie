@@ -25,6 +25,8 @@ public class Nixie.MainWindow : He.ApplicationWindow {
 
     [GtkChild]
     public unowned Gtk.Stack stack;
+    [GtkChild]
+    private unowned He.NavigationRail folded_rail;
 
     private const GLib.ActionEntry[] ACTION_ENTRIES = {
           {ACTION_ABOUT, action_about }
@@ -60,6 +62,9 @@ public class Nixie.MainWindow : He.ApplicationWindow {
 
         set_size_request (360, 360);
         stack.visible_child_name = "clocks";
+
+        ((Gtk.BoxLayout) folded_rail.get_layout_manager ()).orientation = Gtk.Orientation.HORIZONTAL;
+        folded_rail.halign = Gtk.Align.CENTER;
     }
 
     public void action_about () {

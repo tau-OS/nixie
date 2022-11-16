@@ -80,6 +80,7 @@ c_sources = files(
 )
 
 gweather = dependency('gweather4', version: '>= 3.90.0')
+libbismuth_dep = meson.get_compiler('c').find_library('libbismuth', required: false)
 dependencies = [
   dependency('gio-2.0'),
   dependency('gtk4'),
@@ -87,6 +88,7 @@ dependencies = [
   dependency('gobject-2.0'),
   dependency('gee-0.8'),
   dependency('libhelium-1'),
+  dependency('libbismuth-1', fallback: [ 'libbismuth', 'libbismuth_dep' ], version: '>=1.0.0'),
   dependency('gnome-desktop-4'),
   dependency('geocode-glib-2.0', version: '>=1.0'),
   gweather,

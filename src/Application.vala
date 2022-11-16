@@ -43,6 +43,8 @@ public class Nixie.Application : He.Application {
 
         base.startup ();
 
+        Bis.init ();
+
         add_action_entries (app_entries, this);
 
         new MainWindow (this);
