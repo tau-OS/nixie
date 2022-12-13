@@ -8,13 +8,6 @@
         List of world clocks to show.
       </description>
     </key>
-    <key name="alarms" type="aa{sv}">
-      <default>[]</default>
-      <summary>Configured alarms</summary>
-      <description>
-        List of alarms set.
-      </description>
-    </key>
     <key name="timers" type="aa{sv}">
       <default>[]</default>
       <summary>Configured Timers</summary>
