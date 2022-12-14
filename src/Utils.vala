@@ -617,8 +617,8 @@ public class Nixie.Utils.WallClock : Object {
     public GLib.TimeZone timezone { get; private set; }
     public Format format { get; private set; }
 
-    private GLib.Settings settings;
     private Gnome.WallClock wc;
+    private Portal.Settings portal;
 
     private WallClock () {
         wc = new Gnome.WallClock ();
@@ -634,20 +634,45 @@ public class Nixie.Utils.WallClock : Object {
         });
 
         // system-wide settings about clock format
-        settings = new GLib.Settings ("org.gnome.desktop.interface");
-        settings.changed["clock-format"].connect (() => {
-            update_format ();
-        });
-        update_format ();
-
+        portal_run.begin ();
         update ();
+    }
+
+    construct {
+        try {
+            portal = Portal.Settings.get ();
+            portal.setting_changed.connect ((scheme, key, value) => {
+                if (scheme == "org.gnome.desktop.interface" && key == "clock-format") {
+                    var format = value.get_string ();
+                    update_format (format);
+                    update ();
+                    format_time (date_time);
+                }
+            });
+        } catch (GLib.Error error) {
+            warning ("Failed to request time format: %s", error.message);
+        }
     }
 
     public signal void tick ();
 
-    private void update_format () {
-        var sys_format = settings.get_string ("clock-format");
+    private void update_format (string sys_format) {
         format = sys_format == "12h" ? Format.TWELVE : Format.TWENTYFOUR;
+    }
+
+    private async void portal_run () {
+        try {
+            portal = Portal.Settings.get ();
+            var variant = portal.read ("org.gnome.desktop.interface", "clock-format").get_variant ();
+            var format = variant.get_string ();
+
+            update_format (format);
+            update ();
+            format_time (date_time);
+            yield;
+        } catch (GLib.Error error) {
+            warning ("Failed to request time format: %s", error.message);
+        }
     }
 
     // provide various types/objects of the same time, to be used directly

@@ -66,6 +66,7 @@ asresources = gnome.compile_resources(
 sources = [
   'src/Application.vala',
   'src/MainWindow.vala',
+  'src/Portal.vala',
   'src/Utils.vala',
   'src/StopwatchFace.vala',
   'src/TimerFace.vala',

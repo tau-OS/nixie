@@ -11,6 +11,7 @@
         "--socket=wayland",
         "--socket=pulseaudio",
         "--share=network",
+        "--socket=session-bus",
         "--system-talk-name=org.freedesktop.GeoClue2"
     ],
     "cleanup" : [

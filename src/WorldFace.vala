@@ -104,16 +104,6 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
                 return;
             }
 
-            var wallclock = Utils.WallClock.get_default ();
-            var local_time = wallclock.date_time;
-            var time_zone = found_location.get_timezone ();
-
-            if (time_zone == null) {
-                return;
-            }
-
-            var date_time = local_time.to_timezone ((TimeZone) time_zone);
-
             var auto_item = new WorldItem (found_location);
             auto_item.automatic = true;
             locations.prepend (auto_item);
