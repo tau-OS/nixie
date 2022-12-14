@@ -3,3 +3,16 @@
 .search {
 	border-radius: 999px;
 }
+
+.automatic {
+	background: linear-gradient(
+		45deg,
+		mix(@accent_bg_color, @view_bg_color, 0.90),
+		mix(@accent_bg_color, @view_bg_color, 0.93),
+		mix(@accent_bg_color, @view_bg_color, 0.96),
+		mix(@accent_bg_color, @view_bg_color, 0.99)
+	);
+	color: @view_fg_color;
+	box-shadow: 0 0 0 1px alpha(@accent_bg_color, 0.25);
+	margin-bottom: 12px;
+}

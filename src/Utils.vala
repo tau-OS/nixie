@@ -216,6 +216,10 @@ public class Nixie.Utils.ContentStore : GLib.Object, GLib.ListModel {
         }
     }
 
+    public void prepend (ContentItem item) {
+        store.insert (0, item);
+    }
+
     public int get_index (ContentItem item) {
         int position = -1;
         var n = store.get_n_items ();
@@ -654,6 +658,7 @@ public class Nixie.Utils.WallClock : Object {
     }
 
     public string format_time (GLib.DateTime date_time) {
+        update ();
         string time = date_time.format (format == Format.TWELVE ? "%I:%M %p" : "%H:%M");
 
         // Replace ":" with ratio, space with thin-space, and prepend LTR marker

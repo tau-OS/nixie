@@ -25,11 +25,6 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     private GLib.Settings settings;
 
     [GtkChild]
-    private unowned Gtk.Label local_time_title;
-    [GtkChild]
-    private unowned Gtk.Label local_time_subtitle;
-
-    [GtkChild]
     private unowned Gtk.ListBox listbox;
 
     construct {
@@ -119,8 +114,9 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
 
             var date_time = local_time.to_timezone ((TimeZone) time_zone);
 
-            local_time_title.label = "%s".printf ((string) Utils.WallClock.get_default ().format_time (date_time));
-            local_time_subtitle.label = "%s".printf ((string) found_location.get_city_name ());
+            var auto_item = new WorldItem (found_location);
+            auto_item.automatic = true;
+            locations.prepend (auto_item);
         });
 
         yield geo_info.seek ();
@@ -178,6 +174,8 @@ private class Nixie.WorldRow : He.Bin {
 
     internal signal void remove_clock ();
 
+    public bool automatic {get; set;}
+
     public WorldRow (WorldItem location) {
         Object (location: location);
 
@@ -193,17 +191,21 @@ private class Nixie.WorldRow : He.Bin {
         remove_css_class ("day");
         add_css_class (location.state_class);
 
+        if (location.automatic) {
+            add_css_class ("automatic");
+        }
+
         if (location.day_label != null && location.day_label != "") {
             block_title.label = "%s".printf ((string) location.day_label);
-            delete_button.sensitive = true;
+            delete_button.visible = true;
             delete_button.remove_css_class ("hidden");
         } else if (location.automatic) {
             // Translators: This clock represents the local time
             block_title.label = _("Current location");
-            delete_button.sensitive = false;
+            delete_button.visible = false;
             delete_button.add_css_class ("hidden");
         } else {
-            delete_button.sensitive = true;
+            delete_button.visible = true;
             delete_button.remove_css_class ("hidden");
         }
 
