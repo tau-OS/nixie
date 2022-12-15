@@ -23,7 +23,6 @@
             <property name="navigatable">0</property>
             <property name="child">
               <object class="HeNavigationRail">
-                <property name="width-request">120</property>
                 <property name="stack">stack</property>
               </object>
             </property>
