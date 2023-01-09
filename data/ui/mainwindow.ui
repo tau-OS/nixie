@@ -70,7 +70,7 @@
                           <object class="GtkStackPage">
                             <property name="name">clocks</property>
                             <property name="title">Clocks</property>
-                            <property name="icon-name">org.gnome.clocks-symbolic</property>
+                            <property name="icon-name">clock-symbolic</property>
                             <property name="child">
                               <object class="NixieWorldFace" id="world">
                                 <property name="win">NixieMainWindow</property>
