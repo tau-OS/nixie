@@ -30,16 +30,6 @@
         </child>
         <child>
           <object class="BisAlbumPage">
-            <property name="navigatable">0</property>
-            <property name="child">
-              <object class="GtkSeparator">
-                <property name="orientation">vertical</property>
-              </object>
-            </property>
-          </object>
-        </child>
-        <child>
-          <object class="BisAlbumPage">
             <property name="navigatable">1</property>
             <property name="child">
               <object class="GtkBox" id="main_box">
@@ -119,6 +109,9 @@
                     </binding>
                   </object>
                 </child>
+                <style>
+                  <class name="main-view"/>
+                </style>
               </object>
             </property>
           </object>
