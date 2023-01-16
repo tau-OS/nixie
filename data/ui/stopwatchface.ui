@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk" version="4.0"/>
+  <menu id="menu">
+    <item>
+      <attribute name="label" translatable="yes">About Nixie</attribute>
+      <attribute name="action">win.action_about</attribute>
+    </item>
+  </menu>
+</interface>
+<interface>
   <template class="NixieStopwatchFace" parent="GtkBox">
     <property name="orientation">vertical</property>
     <child>
       <object class="HeViewTitle">
         <property name="label" translatable="true">Stopwatch</property>
+        <property name="margin-top">21</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuButton" id="menu_button">
+        <property name="icon-name">open-menu-symbolic</property>
+        <property name="menu-model">menu</property>
+        <property name="halign">end</property>
+        <property name="hexpand">1</property>
+        <property name="margin-end">18</property>
+        <style>
+          <class name="disclosure-button"/>
+        </style>
       </object>
     </child>
     <child>

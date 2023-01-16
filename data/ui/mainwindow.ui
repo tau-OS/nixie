@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <menu id="menu">
-    <item>
-      <attribute name="label" translatable="yes">About Nixie</attribute>
-      <attribute name="action">win.action_about</attribute>
-    </item>
-  </menu>
-</interface>
-<interface>
-  <requires lib="gtk" version="4.0"/>
   <template class="NixieMainWindow" parent="HeApplicationWindow">
     <property name="default-width">500</property>
     <property name="default-height">600</property>
@@ -40,12 +31,6 @@
                     <property name="flat">1</property>
                     <property name="show-buttons">1</property>
                     <property name="show-back">0</property>
-                    <child>
-                      <object class="GtkMenuButton" id="menu_button">
-                        <property name="icon-name">open-menu-symbolic</property>
-                        <property name="menu-model">menu</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>

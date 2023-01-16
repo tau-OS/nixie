@@ -16,3 +16,7 @@
 	box-shadow: 0 0 0 1px alpha(@accent_bg_color, 0.25);
 	margin-bottom: 12px;
 }
+
+.disclosure-button button {
+	border-radius: 999px;
+}
