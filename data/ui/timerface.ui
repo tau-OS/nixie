@@ -14,22 +14,22 @@
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <child>
-          <object class="HeViewTitle">
-            <property name="label" translatable="true">Timer</property>
-            <property name="margin-top">18</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkMenuButton" id="menu_button">
-            <property name="icon-name">open-menu-symbolic</property>
-            <property name="menu-model">menu</property>
-            <property name="halign">end</property>
-            <property name="hexpand">1</property>
-            <property name="margin-end">18</property>
-            <property name="margin-top">16</property>
-            <style>
-              <class name="disclosure-button"/>
-            </style>
+          <object class="HeAppBar">
+            <property name="flat">1</property>
+            <property name="show-buttons">1</property>
+            <property name="show-back">0</property>
+            <property name="viewtitle-label" translatable="true">Stopwatch</property>
+            <property name="scroller">timer_sw</property>
+            <child>
+              <object class="GtkMenuButton" id="menu_button">
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="menu-model">menu</property>
+                <property name="halign">end</property>
+                <property name="hexpand">1</property>
+                <property name="margin-end">18</property>
+                <property name="margin-top">16</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -67,7 +67,7 @@
               <object class="GtkStackPage">
                 <property name="name">timers</property>
                 <property name="child">
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkScrolledWindow" id="timer_sw">
                     <property name="margin-start">18</property>
                     <property name="margin-end">18</property>
                     <child>

@@ -27,13 +27,6 @@
                 <property name="orientation">vertical</property>
                 <property name="hexpand">1</property>
                 <child>
-                  <object class="HeAppBar">
-                    <property name="flat">1</property>
-                    <property name="show-buttons">1</property>
-                    <property name="show-back">0</property>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkWindowHandle">
                     <property name="vexpand">true</property>
                     <child>
