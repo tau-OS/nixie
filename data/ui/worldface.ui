@@ -25,7 +25,7 @@
                 <property name="flat">1</property>
                 <property name="show-buttons">1</property>
                 <property name="show-back">0</property>
-                <property name="viewtitle-label" translatable="true">Stopwatch</property>
+                <property name="viewtitle-label" translatable="true">Clocks</property>
                 <property name="scroller">list_view</property>
                 <child>
                   <object class="GtkMenuButton" id="menu_button">
