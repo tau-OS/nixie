@@ -24,10 +24,6 @@
               <object class="GtkMenuButton" id="menu_button">
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="menu-model">menu</property>
-                <property name="halign">end</property>
-                <property name="hexpand">1</property>
-                <property name="margin-end">18</property>
-                <property name="margin-top">16</property>
               </object>
             </child>
           </object>
