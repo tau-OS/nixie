@@ -82,6 +82,7 @@
                 <child>
                   <object class="HeNavigationRail" id="folded_rail">
                     <property name="stack">stack</property>
+                    <property name="orientation">horizontal</property>
                     <binding name="visible">
                       <lookup name="folded">album</lookup>
                     </binding>
