@@ -8,5 +8,3 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=GTK;Utility;
-DBusActivatable=true
-X-Geoclue-Reason=Set shown world clocks.
