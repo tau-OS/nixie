@@ -144,7 +144,7 @@ public class Nixie.TimerItem : Object, Nixie.Utils.ContentItem {
     }
 }
 
-[GtkTemplate (ui = "/co/tauos/Nixie/timerrow.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/timerrow.ui")]
 public class Nixie.TimerRow : He.Bin {
     public Nixie.TimerItem item {
         get {
@@ -263,7 +263,7 @@ public class Nixie.TimerRow : He.Bin {
     }
 }
 
-[GtkTemplate (ui = "/co/tauos/Nixie/timerface.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/timerface.ui")]
 public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     private TimerSetup timer_setup;
     [GtkChild]
@@ -285,7 +285,7 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     construct {
         timer_setup = new TimerSetup ();
 
-        settings = new GLib.Settings ("co.tauos.Nixie");
+        settings = new GLib.Settings ("com.fyralabs.Nixie");
         timers = new Utils.ContentStore ();
 
         timers_list.bind_model (timers, (timer) => {

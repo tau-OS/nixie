@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema path="/co/tauos/Nixie/" id="co.tauos.Nixie" gettext-domain="co.tauos.Nixie">
+  <schema path="/com/fyralabs/Nixie/" id="com.fyralabs.Nixie" gettext-domain="com.fyralabs.Nixie">
     <key name="clocks" type="aa{sv}">
       <default>[]</default>
       <summary>Configured world clocks</summary>

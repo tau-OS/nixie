@@ -1,5 +1,5 @@
 project(
-    'co.tauos.Nixie',
+    'com.fyralabs.Nixie',
     ['vala', 'c'],
     version: '0.1.0'
 )
@@ -20,10 +20,10 @@ c_args = [
 ]
 
 if get_option('development')
-  app_id = 'co.tauos.Nixie'
+  app_id = 'com.fyralabs.Nixie'
   name_suffix = ' (Development)'
 else
-  app_id = 'co.tauos.Nixie'
+  app_id = 'com.fyralabs.Nixie'
   name_suffix = ''
 endif
 
@@ -58,7 +58,7 @@ add_project_arguments(
 )
 
 asresources = gnome.compile_resources(
-    'as-resources', 'data/co.tauos.Nixie.gresource.xml',
+    'as-resources', 'data/com.fyralabs.Nixie.gresource.xml',
     source_dir: 'data',
     c_name: 'as'
 )

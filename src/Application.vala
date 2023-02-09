@@ -39,7 +39,7 @@ public class Nixie.Application : He.Application {
         accent_color.parse("#4426fa");
         default_accent_color = He.Color.from_gdk_rgba(accent_color);
 
-        resource_base_path = "/co/tauos/Nixie";
+        resource_base_path = "/com/fyralabs/Nixie";
 
         base.startup ();
 

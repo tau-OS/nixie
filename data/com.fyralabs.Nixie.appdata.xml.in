@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>co.tauos.Nixie</id>
+  <id>com.fyralabs.Nixie</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0+</project_license>
   <name>Nixie</name>
-  <launchable type="desktop-id">co.tauos.Nixie.desktop</launchable>
+  <launchable type="desktop-id">com.fyralabs.Nixie.desktop</launchable>
   <summary>World clocks, stopwatches, timers, and alarms</summary>
   <description>
     <p>Set an alarm, time something with a stopwatch or a timer, or see world clocks.</p>
@@ -21,7 +21,7 @@
     </release>
   </releases>
   <provides>
-    <binary>co.tauos.Nixie</binary>
+    <binary>com.fyralabs.Nixie</binary>
   </provides>
   <screenshots>
     <screenshot type="default">

@@ -1,4 +1,4 @@
-<!-- <img align="left" style="vertical-align: middle" width="120" height="120" src="data/icons/128/co.tauos.Nixie.svg"> -->
+<!-- <img align="left" style="vertical-align: middle" width="120" height="120" src="data/icons/128/com.fyralabs.Nixie.svg"> -->
 
 # Nixie
 

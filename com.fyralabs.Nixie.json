@@ -1,9 +1,9 @@
 {
-    "app-id" : "co.tauos.Nixie",
-    "runtime" : "co.tauos.Platform",
+    "app-id" : "com.fyralabs.Nixie",
+    "runtime" : "com.fyralabs.Platform",
     "runtime-version" : "stable",
-    "sdk" : "co.tauos.Sdk",
-    "command" : "co.tauos.Nixie",
+    "sdk" : "com.fyralabs.Sdk",
+    "command" : "com.fyralabs.Nixie",
     "finish-args" : [
         "--device=dri",
         "--share=ipc",

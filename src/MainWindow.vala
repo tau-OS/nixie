@@ -16,7 +16,7 @@
 * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA 02110-1301 USA
 */
-[GtkTemplate (ui = "/co/tauos/Nixie/mainwindow.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/mainwindow.ui")]
 public class Nixie.MainWindow : He.ApplicationWindow {
     public He.Application app {get; construct;}
     public SimpleActionGroup actions { get; construct; }
@@ -56,7 +56,7 @@ public class Nixie.MainWindow : He.ApplicationWindow {
         app.set_accels_for_action ("win.action_keys", {"<Ctrl>question"});
 
         var theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
-        theme.add_resource_path ("/co/tauos/Nixie/");
+        theme.add_resource_path ("/com/fyralabs/Nixie/");
 
         set_size_request (360, 360);
         stack.visible_child_name = "clocks";
@@ -74,7 +74,7 @@ public class Nixie.MainWindow : He.ApplicationWindow {
             "https://github.com/tau-os/nixie",
             // TRANSLATORS: 'Name <email@domain.com>' or 'Name https://website.example'
             {},
-            {"Lains"},
+            {"Fyra Labs"},
             2022,
             He.AboutWindow.Licenses.GPLv3,
             He.Colors.INDIGO

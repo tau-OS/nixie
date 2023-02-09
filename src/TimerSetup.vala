@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-[GtkTemplate (ui = "/co/tauos/Nixie/timersetup.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/timersetup.ui")]
 public class Nixie.TimerSetup : Gtk.Box {
     public signal void duration_changed (int seconds);
     [GtkChild]

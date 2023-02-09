@@ -27,7 +27,7 @@ jobs:
       name: "Build"
       with:
         bundle: nixie.flatpak
-        manifest-path: co.tauos.Nixie.json
+        manifest-path: com.fyralabs.Nixie.json
         cache-key: flatpak-builder-${{ github.sha }}
         repository-name: catalogue
         repository-url: https://repo.tauos.co/catalogue.flatpakrepo

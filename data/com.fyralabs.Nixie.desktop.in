@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Nixie
 Comment=Get the Time
-Exec=co.tauos.Nixie
-Icon=co.tauos.Nixie
+Exec=com.fyralabs.Nixie
+Icon=com.fyralabs.Nixie
 Keywords=clock;timer;stopwatch;alarm
 Terminal=false
 Type=Application

@@ -27,7 +27,7 @@ public class Nixie.Lap : GLib.Object {
     }
 }
 
-[GtkTemplate (ui = "/co/tauos/Nixie/stopwatchrow.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/stopwatchrow.ui")]
 private class Nixie.LapsRow : He.MiniContentBlock {
     private Lap current;
     private Lap? before;
@@ -44,7 +44,7 @@ private class Nixie.LapsRow : He.MiniContentBlock {
     }
 }
 
-[GtkTemplate (ui = "/co/tauos/Nixie/stopwatchface.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/stopwatchface.ui")]
 public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
     public enum State {
         RESET,

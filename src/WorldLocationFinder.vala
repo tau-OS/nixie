@@ -68,7 +68,7 @@ public class LocationRow : Gtk.ListBoxRow {
     }
 }
 
-[GtkTemplate (ui = "/co/tauos/Nixie/worldlocationfinder.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/worldlocationfinder.ui")]
 public class Nixie.WorldLocationFinder : He.Window {
     private ListStore locations;
     private WorldFace world;

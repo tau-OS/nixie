@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-[GtkTemplate (ui = "/co/tauos/Nixie/worldface.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/worldface.ui")]
 public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     public MainWindow win {get; set;}
 
@@ -29,7 +29,7 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
 
     construct {
         locations = new Utils.ContentStore ();
-        settings = new GLib.Settings ("co.tauos.Nixie");
+        settings = new GLib.Settings ("com.fyralabs.Nixie");
 
         locations.set_sorting ((item1, item2) => {
             var interval1 = ((WorldItem) item1).location.get_timezone ().find_interval (GLib.TimeType.UNIVERSAL, Gdk.CURRENT_TIME);
@@ -151,7 +151,7 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     }
 }
 
-[GtkTemplate (ui = "/co/tauos/Nixie/worldrow.ui")]
+[GtkTemplate (ui = "/com/fyralabs/Nixie/worldrow.ui")]
 private class Nixie.WorldRow : He.Bin {
     public WorldItem location { get; construct set; }
 
