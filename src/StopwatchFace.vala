@@ -93,9 +93,7 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
     private unowned Gtk.Box container;
 
     [GtkChild]
-    private unowned He.PillButton start_btn;
-    [GtkChild]
-    private unowned He.PillButton clear_btn;
+    private unowned He.OverlayButton start_btn;
     [GtkChild]
     private unowned Gtk.ListBox laps_list;
 
@@ -140,11 +138,15 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
             }
         });
 
-        reset ();
+        start_btn.clicked.connect (() => {
+            on_start_btn_clicked (start_btn);
+        });
+        start_btn.secondary_clicked.connect (() => {
+            on_clear_btn_clicked (start_btn);
+        });
     }
 
-    [GtkCallback]
-    private void on_start_btn_clicked (Gtk.Button button) {
+    private void on_start_btn_clicked (He.OverlayButton button) {
         switch (state) {
         case State.RESET:
         case State.STOPPED:
@@ -158,8 +160,7 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
         }
     }
 
-    [GtkCallback]
-    private void on_clear_btn_clicked (Gtk.Button button) {
+    private void on_clear_btn_clicked (He.OverlayButton button) {
         switch (state) {
         case State.STOPPED:
             reset ();
@@ -181,21 +182,24 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
 
         state = State.RUNNING;
         add_tick ();
-        start_btn.set_label (_("Pause"));
+        start_btn.label = (_("Pause"));
+        start_btn.icon = "media-playback-pause-symbolic";
+        start_btn.typeb = He.OverlayButton.TypeButton.TERTIARY;
 
-        clear_btn.set_sensitive (true);
-        clear_btn.set_label (_("Lap"));
-        clear_btn.color = He.Colors.LIGHT;
+        start_btn.secondary_icon = "mail-flag-symbolic";
+        start_btn.typeb2 = He.OverlayButton.TypeButton.SECONDARY;
     }
 
     private void stop () {
         timer.stop ();
         state = State.STOPPED;
         remove_tick ();
-        start_btn.set_label (_("Resume"));
-        clear_btn.set_sensitive (true);
-        clear_btn.set_label (_("Clear"));
-        clear_btn.color = He.Colors.RED;
+        start_btn.label = (_("Resume"));
+        start_btn.icon = "media-playback-start-symbolic";
+        start_btn.typeb = He.OverlayButton.TypeButton.PRIMARY;
+
+        start_btn.secondary_icon = "view-refresh-symbolic";
+        start_btn.secondary_color = He.Colors.RED;
     }
 
     private void reset () {
@@ -208,11 +212,13 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
         update_time_label ();
         current_lap = 0;
 
-        start_btn.set_label (_("Start"));
+        start_btn.label = (_("Start"));
+        start_btn.icon = "media-playback-start-symbolic";
+        start_btn.typeb = He.OverlayButton.TypeButton.PRIMARY;
 
-        clear_btn.set_sensitive (false);
-        clear_btn.set_label (_("Lap"));
-        clear_btn.color = He.Colors.LIGHT;
+        start_btn.secondary_icon = null;
+        start_btn.typeb2 = He.OverlayButton.TypeButton.SECONDARY;
+
         laps.remove_all ();
     }
 

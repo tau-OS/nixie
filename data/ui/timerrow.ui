@@ -15,7 +15,7 @@
             <property name="label">00 ∶ 00 ∶ 00</property>
             <style>
               <class name="numeric"/>
-              <class name="display"/>
+              <class name="big-display"/>
             </style>
           </object>
         </child>

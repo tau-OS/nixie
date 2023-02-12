@@ -26,126 +26,110 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="container">
-        <property name="orientation">vertical</property>
-        <property name="vexpand">1</property>
+      <object class="HeOverlayButton" id="start_btn">
+        <property name="vexpand">true</property>
+        <property name="hexpand">true</property>
+        <property name="icon">media-playback-start-symbolic</property>
+        <property name="label" translatable="yes">Start</property>
+        <property name="typeb">primary</property>
+        <property name="sensitive">1</property>
         <child>
-          <object class="GtkBox" id="time_container">
-            <property name="halign">center</property>
-            <property name="margin_bottom">18</property>
-            <property name="margin-end">18</property>
-            <property name="margin-start">18</property>
-            <child>
-              <object class="GtkLabel" id="hours_label">
-                <property name="label">00</property>
-                <style>
-                  <class name="display"/>
-                  <class name="numeric"/>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">∶</property>
-                <style>
-                  <class name="display"/>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="minutes_label">
-                <property name="label">00</property>
-                <style>
-                  <class name="display"/>
-                  <class name="numeric"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">∶</property>
-                <style>
-                  <class name="display"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="seconds_label">
-                <property name="label">00</property>
-                <style>
-                  <class name="display"/>
-                  <class name="numeric"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="label">.</property>
-                <style>
-                  <class name="display"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="miliseconds_label">
-                <property name="label">0</property>
-                <style>
-                  <class name="display"/>
-                  <class name="numeric"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="laps_sw">
-            <property name="min_content_width">300</property>
+          <object class="GtkBox" id="container">
+            <property name="orientation">vertical</property>
             <property name="vexpand">1</property>
-            <property name="hscrollbar_policy">never</property>
             <child>
-              <object class="GtkRevealer" id="laps_revealer">
-                <property name="transition_type">crossfade</property>
+              <object class="GtkBox" id="time_container">
+                <property name="halign">center</property>
+                <property name="margin_bottom">18</property>
+                <property name="margin-end">18</property>
+                <property name="margin-start">18</property>
                 <child>
-                  <object class="GtkListBox" id="laps_list">
-                    <property name="valign">start</property>
-                    <property name="selection_mode">none</property>
-                    <property name="margin-top">18</property>
-                    <property name="margin-bottom">18</property>
-                    <property name="margin-start">12</property>
-                    <property name="margin-end">12</property>
+                  <object class="GtkLabel" id="hours_label">
+                    <property name="label">00</property>
                     <style>
-                      <class name="content-list"/>
+                      <class name="big-display"/>
+                      <class name="numeric"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">∶</property>
+                    <style>
+                      <class name="big-display"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="minutes_label">
+                    <property name="label">00</property>
+                    <style>
+                      <class name="big-display"/>
+                      <class name="numeric"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">∶</property>
+                    <style>
+                      <class name="big-display"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="seconds_label">
+                    <property name="label">00</property>
+                    <style>
+                      <class name="big-display"/>
+                      <class name="numeric"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">.</property>
+                    <style>
+                      <class name="big-display"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="miliseconds_label">
+                    <property name="label">0</property>
+                    <style>
+                      <class name="big-display"/>
+                      <class name="numeric"/>
                     </style>
                   </object>
                 </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="spacing">12</property>
-            <property name="margin-end">18</property>
-            <property name="margin-start">18</property>
-            <property name="margin-bottom">18</property>
-            <property name="halign">center</property>
             <child>
-              <object class="HePillButton" id="start_btn">
-                <property name="label" translatable="yes">Start</property>
-                <property name="width_request">120</property>
-                <property name="hexpand">1</property>
-                <property name="halign">start</property>
-                <signal name="clicked" handler="on_start_btn_clicked" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="HePillButton" id="clear_btn">
-                <property name="label" translatable="yes">Clear</property>
-                <property name="width_request">120</property>
-                <property name="halign">end</property>
-                <signal name="clicked" handler="on_clear_btn_clicked" swapped="no"/>
+              <object class="GtkScrolledWindow" id="laps_sw">
+                <property name="min_content_width">300</property>
+                <property name="vexpand">1</property>
+                <property name="hscrollbar_policy">never</property>
+                <child>
+                  <object class="GtkRevealer" id="laps_revealer">
+                    <property name="transition_type">crossfade</property>
+                    <child>
+                      <object class="GtkListBox" id="laps_list">
+                        <property name="valign">start</property>
+                        <property name="selection_mode">none</property>
+                        <property name="margin-top">18</property>
+                        <property name="margin-bottom">18</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <style>
+                          <class name="content-list"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
