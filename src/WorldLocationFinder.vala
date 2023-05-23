@@ -96,7 +96,6 @@ public class Nixie.WorldLocationFinder : He.Window {
 
     public WorldLocationFinder (Gtk.Window parent, WorldFace world_face) {
         Object (transient_for: parent);
-        modal = true;
 
         search_entry.set_key_capture_widget (this);
 
