@@ -1,0 +1,12 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    uses: tau-OS/github-actions/.github/workflows/deploy-flatpak.yml@main
+    with:
+      manifestPath: com.fyralabs.Nixie.json
+    secrets:
+      managerToken: ${{ secrets.FLATPAK_REPO_TOKEN }}
