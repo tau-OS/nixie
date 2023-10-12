@@ -18,6 +18,7 @@
                 <child>
                     <object class="HeAppBar">
                         <property name="show-left-title-buttons">1</property>
+                        <property name="show-right-title-buttons">0</property>
                         <style>
                           <class name="sidebar-view"/>
                         </style>
