@@ -13,8 +13,21 @@
           <object class="BisAlbumPage">
             <property name="navigatable">0</property>
             <property name="child">
-              <object class="HeNavigationRail">
-                <property name="stack">stack</property>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                    <object class="HeAppBar">
+                        <property name="show-left-title-buttons">1</property>
+                        <style>
+                          <class name="sidebar-view"/>
+                        </style>
+                    </object>
+                </child>
+                <child>
+                    <object class="HeNavigationRail">
+                        <property name="stack">stack</property>
+                    </object>
+                </child>
               </object>
             </property>
           </object>
