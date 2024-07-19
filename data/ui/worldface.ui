@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <menu id="menu">
-    <item>
-      <attribute name="label" translatable="yes">About Nixie</attribute>
-      <attribute name="action">win.action_about</attribute>
-    </item>
-  </menu>
-</interface>
-<interface>
   <template class="NixieWorldFace" parent="HeBin">
-    <child>
-      <object class="HeOverlayButton" id="add_button">
-        <property name="vexpand">true</property>
-        <property name="hexpand">true</property>
-        <property name="icon">list-add-symbolic</property>
-        <property name="alignment">center</property>
-        <property name="typeb">primary</property>
-        <signal name="clicked" handler="on_new" swapped="no"/>
+    <property name="child">
+      <object class="GtkStack" id="stack">
+        <property name="transition-type">crossfade</property>
+        <property name="vexpand">1</property>
         <child>
-          <object class="GtkBox">
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="HeAppBar">
-                <property name="show-left-title-buttons">0</property>
-                <property name="show-right-title-buttons">1</property>
-                <property name="show-back">0</property>
-                <property name="viewtitle-label" translatable="true">Clocks</property>
-                <property name="scroller">list_view</property>
+          <object class="GtkStackPage">
+            <property name="name">empty</property>
+            <property name="child">
+              <object class="HeOverlayButton" id="add_button">
+                <property name="vexpand">true</property>
+                <property name="hexpand">true</property>
+                <property name="icon">list-add-symbolic</property>
+                <property name="alignment">center</property>
+                <property name="typeb">primary</property>
+                <signal name="clicked" handler="on_new" swapped="no"/>
                 <child>
-                  <object class="GtkMenuButton" id="menu_button">
-                    <property name="icon-name">open-menu-symbolic</property>
-                    <property name="menu-model">menu</property>
+                  <object class="HeEmptyPage" id="emptypage">
+                    <property name="icon">clock-symbolic</property>
+                    <property name="title" translatable="true">No Clocks</property>
+                    <property name="description" translatable="true">Add a clock with the + button.</property>
                   </object>
                 </child>
               </object>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow" id="list_view">
-                <property name="vexpand">1</property>
+            </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStackPage">
+            <property name="name">clocks</property>
+            <property name="child">
+              <object class="HeOverlayButton" id="add_button2">
+                <property name="vexpand">true</property>
+                <property name="hexpand">true</property>
+                <property name="icon">list-add-symbolic</property>
+                <property name="alignment">center</property>
+                <property name="typeb">primary</property>
+                <property name="margin-top">96</property>
+                <signal name="clicked" handler="on_new" swapped="no"/>
                 <child>
-                  <object class="GtkListBox" id="listbox">
-                    <property name="valign">start</property>
-                    <property name="hexpand">1</property>
-                    <property name="selection-mode">none</property>
-                    <property name="margin-start">18</property>
-                    <property name="margin-end">18</property>
-                    <style>
-                      <class name="content-list"/>
-                    </style>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="list_view">
+                        <property name="vexpand">1</property>
+                        <child>
+                          <object class="GtkListBox" id="listbox">
+                            <property name="valign">start</property>
+                            <property name="hexpand">1</property>
+                            <property name="selection-mode">none</property>
+                            <property name="margin-start">18</property>
+                            <property name="margin-end">18</property>
+                            <style>
+                              <class name="content-list"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
-            </child>
+            </property>
           </object>
         </child>
       </object>
-    </child>
+    </property>
   </template>
 </interface>

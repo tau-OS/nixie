@@ -1,31 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk" version="4.0"/>
-  <menu id="menu">
-    <item>
-      <attribute name="label" translatable="yes">About Nixie</attribute>
-      <attribute name="action">win.action_about</attribute>
-    </item>
-  </menu>
-</interface>
-<interface>
   <template class="NixieStopwatchFace" parent="GtkBox">
     <property name="orientation">vertical</property>
-    <child>
-      <object class="HeAppBar">
-        <property name="show-left-title-buttons">0</property>
-        <property name="show-right-title-buttons">1</property>
-        <property name="show-back">0</property>
-        <property name="viewtitle-label" translatable="true">Stopwatch</property>
-        <property name="scroller">laps_sw</property>
-        <child>
-          <object class="GtkMenuButton" id="menu_button">
-            <property name="icon-name">open-menu-symbolic</property>
-            <property name="menu-model">menu</property>
-          </object>
-        </child>
-      </object>
-    </child>
+    <property name="margin-top">96</property>
     <child>
       <object class="HeOverlayButton" id="start_btn">
         <property name="vexpand">true</property>
@@ -41,7 +18,7 @@
             <child>
               <object class="GtkBox" id="time_container">
                 <property name="halign">center</property>
-                <property name="margin_bottom">18</property>
+                <property name="margin_bottom">12</property>
                 <property name="margin-end">18</property>
                 <property name="margin-start">18</property>
                 <child>
@@ -112,6 +89,7 @@
               <object class="GtkScrolledWindow" id="laps_sw">
                 <property name="min_content_width">300</property>
                 <property name="vexpand">1</property>
+                <property name="visible">false</property>
                 <property name="hscrollbar_policy">never</property>
                 <child>
                   <object class="GtkRevealer" id="laps_revealer">
@@ -120,7 +98,6 @@
                       <object class="GtkListBox" id="laps_list">
                         <property name="valign">start</property>
                         <property name="selection_mode">none</property>
-                        <property name="margin-top">18</property>
                         <property name="margin-bottom">18</property>
                         <property name="margin-start">12</property>
                         <property name="margin-end">12</property>

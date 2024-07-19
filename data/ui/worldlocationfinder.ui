@@ -2,38 +2,36 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="NixieWorldLocationFinder" parent="HeWindow">
+    <property name="modal">1</property>
     <child>
       <object class="GtkBox">
         <child>
           <object class="GtkBox" id="side_box">
             <property name="orientation">vertical</property>
             <child>
-              <object class="HeAppBar">
-                <property name="show-left-title-buttons">0</property>
-                <property name="show-right-title-buttons">1</property>
-                <property name="show-back">0</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkSearchEntry" id="search_entry">
-                    <property name="placeholder-text" translatable="yes">Search for a location…</property>
-                    <property name="margin-start">18</property>
-                    <property name="margin-end">18</property>
-                    <property name="halign">start</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="placeholder-text" translatable="yes">Search Locations…</property>
                     <style>
+                      <class name="text-field"/>
                       <class name="search"/>
+                      <class name="outline"/>
                     </style>
                   </object>
                 </child>
                 <child>
+                  <object class="HeDivider">
+                  </object>
+                </child>
+                <child>
                   <object class="GtkStack" id="search_stack">
-                    <property name="margin-top">12</property>
-                    <property name="margin-bottom">12</property>
-                    <property name="margin-start">18</property>
-                    <property name="margin-end">18</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
                     <property name="transition_type">crossfade</property>
                     <property name="vhomogeneous">true</property>
                     <property name="vexpand">true</property>
@@ -67,12 +65,28 @@
                   </object>
                 </child>
                 <child>
-                  <object class="HePillButton" id="add_button">
-                    <property name="margin-bottom">18</property>
-                    <property name="margin-start">18</property>
-                    <property name="margin-end">18</property>
-                    <property name="label">Add Location</property>
-                    <signal name="clicked" handler="add_button_clicked"/>
+                  <object class="HeDivider">
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">12</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="margin-bottom">24</property>
+                    <property name="homogeneous">1</property>
+                    <child>
+                      <object class="HeTintButton" id="cancel_button">
+                        <property name="label">Cancel</property>
+                        <signal name="clicked" handler="cancel_button_clicked"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HeFillButton" id="add_button">
+                        <property name="label">Add Location</property>
+                        <signal name="clicked" handler="add_button_clicked"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

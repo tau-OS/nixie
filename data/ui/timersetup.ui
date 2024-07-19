@@ -47,6 +47,7 @@
                         <signal name="output" handler="show_leading_zeros" swapped="no"/>
                         <style>
                           <class name="big-display"/>
+                          <class name="time-spinbutton"/>
                         </style>
                         <layout>
                           <property name="column">1</property>
@@ -79,6 +80,7 @@
                         <signal name="output" handler="show_leading_zeros" swapped="no"/>
                         <style>
                           <class name="big-display"/>
+                          <class name="time-spinbutton"/>
                         </style>
                         <layout>
                           <property name="column">3</property>
@@ -111,6 +113,7 @@
                         <signal name="output" handler="show_leading_zeros" swapped="no"/>
                         <style>
                           <class name="big-display"/>
+                          <class name="time-spinbutton"/>
                         </style>
                         <layout>
                           <property name="column">5</property>

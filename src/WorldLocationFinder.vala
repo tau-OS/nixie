@@ -92,7 +92,7 @@ public class Nixie.WorldLocationFinder : He.Window {
     [GtkChild]
     unowned Gtk.SearchEntry search_entry;
     [GtkChild]
-    unowned He.PillButton add_button;
+    unowned He.FillButton add_button;
 
     public WorldLocationFinder (Gtk.Window parent, WorldFace world_face) {
         Object (transient_for: parent);
@@ -150,6 +150,11 @@ public class Nixie.WorldLocationFinder : He.Window {
     [GtkCallback]
     private void add_button_clicked () {
         location_added ();
+        close ();
+    }
+
+    [GtkCallback]
+    private void cancel_button_clicked () {
         close ();
     }
 

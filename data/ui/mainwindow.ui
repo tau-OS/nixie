@@ -1,112 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
+  <menu id="menu">
+    <item>
+      <attribute name="label" translatable="yes">About Nixie</attribute>
+      <attribute name="action">win.action_about</attribute>
+    </item>
+  </menu>
   <template class="NixieMainWindow" parent="HeApplicationWindow">
-    <property name="default-width">500</property>
+    <property name="default-width">530</property>
     <property name="default-height">600</property>
+    <property name="width-request">360</property>
+    <property name="height-request">294</property>
     <child>
-      <object class="BisAlbum" id="album">
-        <property name="can-navigate-back">1</property>
-        <property name="can-navigate-forward">1</property>
-        <property name="visible-child">main_box</property>
-        <child>
-          <object class="BisAlbumPage">
-            <property name="navigatable">0</property>
-            <property name="child">
-              <object class="GtkBox">
-                <property name="orientation">vertical</property>
-                <child>
-                    <object class="HeAppBar">
-                        <property name="show-left-title-buttons">1</property>
-                        <property name="show-right-title-buttons">0</property>
-                        <style>
-                          <class name="sidebar-view"/>
-                        </style>
-                    </object>
-                </child>
-                <child>
-                    <object class="HeNavigationRail">
-                        <property name="stack">stack</property>
-                    </object>
-                </child>
-              </object>
-            </property>
+      <object class="GtkOverlay">
+        <child type="overlay">
+          <object class="HeAppBar">
+              <property name="show-left-title-buttons">1</property>
+              <property name="show-right-title-buttons">1</property>
+              <property name="valign">start</property>
+              <child>
+                <object class="GtkMenuButton" id="menu_button">
+                  <property name="icon-name">open-menu-symbolic</property>
+                  <property name="menu-model">menu</property>
+                </object>
+              </child>
           </object>
         </child>
         <child>
-          <object class="BisAlbumPage">
-            <property name="navigatable">1</property>
-            <property name="child">
-              <object class="GtkBox" id="main_box">
-                <property name="orientation">vertical</property>
-                <property name="hexpand">1</property>
-                <child>
-                  <object class="GtkWindowHandle">
-                    <property name="vexpand">true</property>
+          <object class="BisAlbum" id="album">
+            <property name="can-navigate-back">1</property>
+            <property name="can-navigate-forward">1</property>
+            <property name="visible-child">main_box</property>
+            <child>
+              <object class="BisAlbumPage">
+                <property name="navigatable">0</property>
+                <property name="child">
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkStack" id="stack">
-                        <property name="transition_type">crossfade</property>
-                        <property name="vhomogeneous">true</property>
+                        <object class="HeNavigationRail">
+                            <property name="stack">stack</property>
+                        </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="BisAlbumPage">
+                <property name="navigatable">1</property>
+                <property name="child">
+                  <object class="GtkBox" id="main_box">
+                    <property name="orientation">vertical</property>
+                    <property name="hexpand">1</property>
+                    <child>
+                      <object class="GtkWindowHandle">
                         <property name="vexpand">true</property>
                         <child>
-                          <object class="GtkStackPage">
-                            <property name="name">clocks</property>
-                            <property name="title">Clocks</property>
-                            <property name="icon-name">clock-symbolic</property>
-                            <property name="child">
-                              <object class="NixieWorldFace" id="world">
-                                <property name="win">NixieMainWindow</property>
+                          <object class="GtkStack" id="stack">
+                            <property name="transition_type">crossfade</property>
+                            <property name="vhomogeneous">true</property>
+                            <property name="vexpand">true</property>
+                            <child>
+                              <object class="GtkStackPage">
+                                <property name="name">clocks</property>
+                                <property name="title">Clocks</property>
+                                <property name="icon-name">clock-symbolic</property>
+                                <property name="child">
+                                  <object class="NixieWorldFace" id="world">
+                                    <property name="win">NixieMainWindow</property>
+                                  </object>
+                                </property>
                               </object>
-                            </property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkStackPage">
-                            <property name="name">timer</property>
-                            <property name="title">Timer</property>
-                            <property name="icon-name">timer-symbolic</property>
-                            <property name="child">
-                              <object class="NixieTimerFace" id="timer">
+                            </child>
+                            <child>
+                              <object class="GtkStackPage">
+                                <property name="name">timer</property>
+                                <property name="title">Timer</property>
+                                <property name="icon-name">timer-symbolic</property>
+                                <property name="child">
+                                  <object class="NixieTimerFace" id="timer">
+                                  </object>
+                                </property>
                               </object>
-                            </property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkStackPage">
-                            <property name="name">stopwatch</property>
-                            <property name="title">Stopwatch</property>
-                            <property name="icon-name">stopwatch-symbolic</property>
-                            <property name="child">
-                              <object class="NixieStopwatchFace" id="sw">
+                            </child>
+                            <child>
+                              <object class="GtkStackPage">
+                                <property name="name">stopwatch</property>
+                                <property name="title">Stopwatch</property>
+                                <property name="icon-name">stopwatch-symbolic</property>
+                                <property name="child">
+                                  <object class="NixieStopwatchFace" id="sw">
+                                  </object>
+                                </property>
                               </object>
-                            </property>
+                            </child>
                           </object>
                         </child>
                       </object>
                     </child>
+                    <child>
+                      <object class="HeNavigationRail" id="folded_rail">
+                        <property name="stack">stack</property>
+                        <property name="orientation">horizontal</property>
+                        <binding name="visible">
+                          <lookup name="folded">album</lookup>
+                        </binding>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="main-view"/>
+                    </style>
                   </object>
-                </child>
-                <child>
-                  <object class="GtkSeparator">
-                    <binding name="visible">
-                      <lookup name="folded">album</lookup>
-                    </binding>
-                  </object>
-                </child>
-                <child>
-                  <object class="HeNavigationRail" id="folded_rail">
-                    <property name="stack">stack</property>
-                    <property name="orientation">horizontal</property>
-                    <binding name="visible">
-                      <lookup name="folded">album</lookup>
-                    </binding>
-                  </object>
-                </child>
-                <style>
-                  <class name="main-view"/>
-                </style>
+                </property>
               </object>
-            </property>
+            </child>
           </object>
         </child>
       </object>

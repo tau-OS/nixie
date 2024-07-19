@@ -25,6 +25,8 @@ public class Nixie.MainWindow : He.ApplicationWindow {
 
     [GtkChild]
     public unowned Gtk.Stack stack;
+    [GtkChild]
+    public unowned Gtk.MenuButton menu_button;
 
     private const GLib.ActionEntry[] ACTION_ENTRIES = {
           {ACTION_ABOUT, action_about }
@@ -58,8 +60,9 @@ public class Nixie.MainWindow : He.ApplicationWindow {
         var theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
         theme.add_resource_path ("/com/fyralabs/Nixie/");
 
-        set_size_request (360, 360);
         stack.visible_child_name = "clocks";
+
+        menu_button.get_popover ().has_arrow = false;
     }
 
     public void action_about () {

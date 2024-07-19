@@ -25,9 +25,15 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     private GLib.Settings settings;
 
     [GtkChild]
+    private unowned Gtk.Stack stack;
+    [GtkChild]
+    private unowned He.EmptyPage emptypage;
+    [GtkChild]
     private unowned Gtk.ListBox listbox;
 
     construct {
+        emptypage.action_button.visible = false;
+
         locations = new Utils.ContentStore ();
         settings = new GLib.Settings ("com.fyralabs.Nixie");
 
@@ -79,6 +85,12 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     private void load () {
         locations.deserialize (settings.get_value ("clocks"), WorldItem.deserialize);
 
+        if (locations.get_n_items () != 0) {
+            stack.set_visible_child_name ("clocks");
+        } else {
+            stack.set_visible_child_name ("empty");
+        }
+
         use_geolocation.begin ((obj, res) => {
             use_geolocation.end (res);
         });
@@ -90,6 +102,8 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
 
     private void remove_clock (WorldItem item) {
         locations.remove (item);
+        if (locations.get_n_items () == 0)
+            stack.set_visible_child_name ("empty");
     }
 
     private async void use_geolocation () {
@@ -114,6 +128,7 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
 
     private void add_location_item (WorldItem item) {
         locations.add (item);
+        stack.set_visible_child_name ("clocks");
         save ();
     }
 
@@ -200,6 +215,8 @@ private class Nixie.WorldRow : He.Bin {
         }
 
         block_title.label = location.time_label;
+        block_title.add_css_class ("display");
+        block_title.remove_css_class ("cb-title");
     }
 
     [GtkCallback]
