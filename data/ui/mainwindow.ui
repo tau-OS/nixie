@@ -41,6 +41,7 @@
                     <child>
                         <object class="HeNavigationRail">
                             <property name="stack">stack</property>
+                            <property name="width-request">123</property>
                         </object>
                     </child>
                   </object>
