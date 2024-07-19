@@ -17,10 +17,23 @@
                 <property name="typeb">primary</property>
                 <signal name="clicked" handler="on_new" swapped="no"/>
                 <child>
-                  <object class="HeEmptyPage" id="emptypage">
-                    <property name="icon">clock-symbolic</property>
-                    <property name="title" translatable="true">No Clocks</property>
-                    <property name="description" translatable="true">Add a clock with the + button.</property>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="HeViewTitle">
+                        <property name="halign">start</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-bottom">18</property>
+                        <property name="label" translatable="true">Clocks</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="HeEmptyPage" id="emptypage">
+                        <property name="icon">clock-symbolic</property>
+                        <property name="title" translatable="true">No Clocks</property>
+                        <property name="description" translatable="true">Add a clock with the + button.</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -37,11 +50,19 @@
                 <property name="icon">list-add-symbolic</property>
                 <property name="alignment">center</property>
                 <property name="typeb">primary</property>
-                <property name="margin-top">96</property>
+                <property name="margin-top">52</property>
                 <signal name="clicked" handler="on_new" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
+                    <child>
+                      <object class="HeViewTitle">
+                        <property name="halign">start</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-bottom">18</property>
+                        <property name="label" translatable="true">Clocks</property>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkScrolledWindow" id="list_view">
                         <property name="vexpand">1</property>
