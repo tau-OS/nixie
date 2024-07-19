@@ -25,6 +25,7 @@
             <child>
               <object class="GtkBox" id="container">
                 <property name="orientation">vertical</property>
+                <property name="valign">center</property>
                 <property name="vexpand">1</property>
                 <child>
                   <object class="GtkBox" id="time_container">
