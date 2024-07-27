@@ -19,7 +19,7 @@
               <property name="show-left-title-buttons">1</property>
               <property name="show-right-title-buttons">1</property>
               <property name="valign">start</property>
-              <child>
+              <child type="titlebar-menu">
                 <object class="GtkMenuButton" id="menu_button">
                   <property name="icon-name">open-menu-symbolic</property>
                   <property name="menu-model">menu</property>
