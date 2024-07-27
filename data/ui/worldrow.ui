@@ -29,12 +29,16 @@
           </object>
         </child>
         <child>
-          <object class="HeDisclosureButton" id="delete_button">
+          <object class="HeTintButton" id="delete_button">
             <property name="valign">center</property>
             <property name="halign">end</property>
             <property name="tooltip_text" translatable="yes">Delete</property>
             <property name="icon">edit-delete-symbolic</property>
             <signal name="clicked" handler="delete" object="NixieWorldRow" swapped="no"/>
+            <style>
+              <class name="circular"/>
+              <class name="meson-red"/>
+            </style>
           </object>
         </child>
       </object>
