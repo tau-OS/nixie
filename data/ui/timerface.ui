@@ -62,7 +62,7 @@
               </object>
             </child>
             <child>
-              <object class="HeFillButton" id="start_button">
+              <object class="HeButton" id="start_button">
                 <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="margin-bottom">18</property>

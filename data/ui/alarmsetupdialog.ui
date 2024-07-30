@@ -110,14 +110,16 @@
             <property name="spacing">12</property>
             <property name="halign">center</property>
             <child>
-              <object class="HePillButton" id="delete_button">
+              <object class="HeButton" id="delete_button">
                 <property name="label" translatable="yes">Remove Alarm</property>
+                <property name="is-pill">1</property>
                 <property name="halign">center</property>
                 <signal name="clicked" handler="delete" swapped="no" />
               </object>
             </child>
             <child>
-              <object class="HePillButton" id="primary_button">
+              <object class="HeButton" id="primary_button">
+                <property name="is-pill">1</property>
                 <property name="halign">center</property>
               </object>
             </child>

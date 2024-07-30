@@ -76,14 +76,16 @@
                     <property name="margin-bottom">24</property>
                     <property name="homogeneous">1</property>
                     <child>
-                      <object class="HeTintButton" id="cancel_button">
+                      <object class="HeButton" id="cancel_button">
                         <property name="label">Cancel</property>
+                        <property name="is-tint">1</property>
                         <signal name="clicked" handler="cancel_button_clicked"/>
                       </object>
                     </child>
                     <child>
-                      <object class="HeFillButton" id="add_button">
+                      <object class="HeButton" id="add_button">
                         <property name="label">Add Location</property>
+                        <property name="is-fill">1</property>
                         <signal name="clicked" handler="add_button_clicked"/>
                       </object>
                     </child>
