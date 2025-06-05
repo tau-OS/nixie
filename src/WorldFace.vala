@@ -19,7 +19,7 @@
 
 [GtkTemplate (ui = "/com/fyralabs/Nixie/worldface.ui")]
 public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
-    public MainWindow win {get; set;}
+    public MainWindow win { get; set; }
 
     private Utils.ContentStore locations;
     private GLib.Settings settings;
@@ -30,6 +30,8 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     private unowned He.EmptyPage emptypage;
     [GtkChild]
     private unowned Gtk.ListBox listbox;
+    [GtkChild]
+    public unowned Gtk.MenuButton menu_button;
 
     construct {
         emptypage.action_button.visible = false;
@@ -70,11 +72,13 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
         // Start ticking...
         Utils.WallClock.get_default ().tick.connect (() => {
             locations.foreach ((l) => {
-                ((WorldItem)l).tick ();
+                ((WorldItem) l).tick ();
             });
             // TODO Only need to queue what changed
             listbox.queue_draw ();
         });
+
+        menu_button.get_popover ().has_arrow = false;
     }
 
     [GtkCallback]
@@ -156,12 +160,12 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
         var dialog = new WorldLocationFinder ((Gtk.Window) get_root (), this);
 
         dialog.location_added.connect (() => {
-                var location = dialog.get_selected_location ();
-                if (location != null)
-                    add_location ((GWeather.Location) location);
+            var location = dialog.get_selected_location ();
+            if (location != null)
+                add_location ((GWeather.Location) location);
 
-                dialog.destroy ();
-            });
+            dialog.destroy ();
+        });
         dialog.present ();
     }
 }
@@ -179,7 +183,7 @@ private class Nixie.WorldRow : He.Bin {
 
     internal signal void remove_clock ();
 
-    public bool automatic {get; set;}
+    public bool automatic { get; set; }
 
     public WorldRow (WorldItem location) {
         Object (location: location);
@@ -283,7 +287,7 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
     }
 
     public bool is_daytime {
-         get {
+        get {
             if (weather_info != null) {
                 return ((GWeather.Info) weather_info).is_daytime ();
             }
@@ -370,7 +374,7 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
         }
 
         return (date_time.compare ((DateTime) sunrise) > 0) &&
-                        (date_time.compare ((DateTime) sunset) < 0);
+               (date_time.compare ((DateTime) sunset) < 0);
     }
 
     // CSS class for the current time of day
@@ -408,7 +412,7 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
     private int last_calc_day = -1;
 
     public WorldItem (GWeather.Location location) {
-        Object (location: location);
+        Object (location : location);
 
         time_zone = location.get_timezone ();
 
@@ -542,8 +546,8 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
         // and we do not want update() to be called.
         if (location.has_coords ()) {
             weather_info = (GWeather.Info) Object.new (typeof (GWeather.Info),
-                                                       location: location,
-                                                       enabled_providers: GWeather.Provider.NONE);
+                                                       location : location,
+                                                       enabled_providers : GWeather.Provider.NONE);
         }
     }
 
@@ -555,7 +559,7 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
         }
     }
 
-    public static WorldItem? deserialize (Variant location_variant) {
+    public static WorldItem ? deserialize (Variant location_variant) {
         GWeather.Location? location = null;
         string key;
         Variant val;

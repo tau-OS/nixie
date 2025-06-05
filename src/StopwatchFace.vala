@@ -97,6 +97,9 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
     [GtkChild]
     private unowned Gtk.ListBox laps_list;
 
+    [GtkChild]
+    public unowned Gtk.MenuButton menu_button;
+
     construct {
         laps = new GLib.ListStore (typeof (Lap));
 
@@ -109,9 +112,9 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
             var total_items = laps.get_n_items ();
             Lap? before = null;
             if (total_items > 1) {
-                before = (Lap)laps.get_item (total_items - 1); // Get the latest item
+                before = (Lap) laps.get_item (total_items - 1); // Get the latest item
             }
-            var lap_row = new LapsRow ((Lap)lap, before);
+            var lap_row = new LapsRow ((Lap) lap, before);
             return lap_row;
         });
 
@@ -142,12 +145,14 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
         start_btn.secondary_clicked.connect (() => {
             on_clear_btn_clicked (start_btn);
         });
+
+        menu_button.get_popover ().has_arrow = false;
     }
 
     private void on_start_btn_clicked (He.OverlayButton button) {
         switch (state) {
-        case State.RESET:
-        case State.STOPPED:
+        case State.RESET :
+        case State.STOPPED :
             start ();
             break;
         case State.RUNNING:

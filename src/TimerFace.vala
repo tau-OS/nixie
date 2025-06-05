@@ -26,7 +26,7 @@ public class Nixie.TimerItem : Object, Nixie.Utils.ContentItem {
 
     public State state { get; private set; default = State.STOPPED; }
 
-    public string? name { get ; set; }
+    public string? name { get; set; }
     public int hours { get; set; default = 0; }
     public int minutes { get; set; default = 0; }
     public int seconds { get; set; default = 0; }
@@ -55,7 +55,7 @@ public class Nixie.TimerItem : Object, Nixie.Utils.ContentItem {
         builder.close ();
     }
 
-    public static TimerItem? deserialize (Variant time_variant) {
+    public static TimerItem ? deserialize (Variant time_variant) {
         string key;
         Variant val;
         int duration = 0;
@@ -64,12 +64,12 @@ public class Nixie.TimerItem : Object, Nixie.Utils.ContentItem {
         var iter = time_variant.iterator ();
         while (iter.next ("{sv}", out key, out val)) {
             switch (key) {
-                case "duration":
-                    duration = (int32) val;
-                    break;
-                case "name":
-                    name = (string) val;
-                    break;
+            case "duration" :
+                duration = (int32) val;
+                break;
+            case "name":
+                name = (string) val;
+                break;
             }
         }
 
@@ -84,11 +84,11 @@ public class Nixie.TimerItem : Object, Nixie.Utils.ContentItem {
         int m = rest / 60;
         int s = rest - m * 60;
 
-        this (h, m, s, name);
+        this(h, m, s, name);
     }
 
     public TimerItem (int h, int m, int s, string? name) {
-        Object (name: name);
+        Object (name : name);
         hours = h;
         minutes = m;
         seconds = s;
@@ -258,7 +258,7 @@ public class Nixie.TimerRow : He.Bin {
         name_stack.visible_child_name = "display";
     }
 
-    private void update_countdown (int h, int m, int s ) {
+    private void update_countdown (int h, int m, int s) {
         countdown_label.set_text ("%02i ∶ %02i ∶ %02i".printf (h, m, s));
     }
 }
@@ -274,6 +274,8 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     private unowned Gtk.Button start_button;
     [GtkChild]
     private unowned Gtk.Stack stack;
+    [GtkChild]
+    public unowned Gtk.MenuButton menu_button;
 
     public bool is_running { get; set; default = false; }
 
@@ -292,14 +294,14 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
             var row = new TimerRow ((TimerItem) timer);
             row.deleted.connect (() => remove_timer ((TimerItem) timer));
             row.edited.connect (() => save ());
-            ((TimerItem)timer).ring.connect (() => ring ());
-            ((TimerItem)timer).notify["state"].connect (() => {
+            ((TimerItem) timer).ring.connect (() => ring ());
+            ((TimerItem) timer).notify["state"].connect (() => {
                 this.is_running = this.get_total_active_timers () != 0;
             });
             return row;
         });
 
-        timers.items_changed.connect ( (added, removed, position) => {
+        timers.items_changed.connect ((added, removed, position) => {
             if (this.timers.get_n_items () > 0) {
                 stack.visible_child_name = "timers";
             } else {
@@ -328,12 +330,14 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
             timer.start ();
         });
         load ();
+
+        menu_button.get_popover ().has_arrow = false;
     }
 
     private int get_total_active_timers () {
         var total_items = 0;
         this.timers.foreach ((timer) => {
-            if (((TimerItem)timer).state == TimerItem.State.RUNNING) {
+            if (((TimerItem) timer).state == TimerItem.State.RUNNING) {
                 total_items += 1;
             }
         });
@@ -370,12 +374,12 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     public bool escape_pressed () {
         var res = false;
         this.timers.foreach ((item) => {
-                var timer = (TimerItem) item;
-                if (timer.state == TimerItem.State.RUNNING) {
-                    timer.pause ();
-                    res = true;
-                }
-            });
+            var timer = (TimerItem) item;
+            if (timer.state == TimerItem.State.RUNNING) {
+                timer.pause ();
+                res = true;
+            }
+        });
         return res;
     }
 }
