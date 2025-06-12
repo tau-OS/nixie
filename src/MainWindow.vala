@@ -25,6 +25,8 @@ public class Nixie.MainWindow : He.ApplicationWindow {
 
     [GtkChild]
     public unowned Gtk.Stack stack;
+    [GtkChild]
+    public unowned Gtk.Overlay about_overlay;
 
     private const GLib.ActionEntry[] ACTION_ENTRIES = {
         { ACTION_ABOUT, action_about }
@@ -78,6 +80,7 @@ public class Nixie.MainWindow : He.ApplicationWindow {
                                         He.AboutWindow.Licenses.GPLV3,
                                         He.Colors.INDIGO
         );
+        about_overlay.add_overlay (about);
         about.present ();
     }
 }
