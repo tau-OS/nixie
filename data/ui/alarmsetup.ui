@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <template class="NixieAlarmSetupDialog" parent="HeWindow">
-    <property name="modal">True</property>
-    <property name="destroy_with_parent">True</property>
+    <property name="modal">true</property>
+    <property name="destroy_with_parent">true</property>
     <property name="default-width">415</property>
     <property name="default-height">400</property>
     <property name="title" translatable="yes">New Alarm</property>
+    <property name="resizable">false</property>
     <child>
       <object class="GtkBox">
         <property name="spacing">12</property>
@@ -28,7 +29,7 @@
                 <property name="wrap">True</property>
                 <property name="width-request">60</property>
                 <style>
-                  <class name="display"/>
+                  <class name="display-emphasized"/>
                 </style>
                 <signal name="changed" handler="spinbuttons_changed" object="NixieAlarmSetupDialog" swapped="no"/>
                 <signal name="output" handler="show_leading_zeros"/>
@@ -58,7 +59,7 @@
                 <property name="wrap">True</property>
                 <property name="width-request">60</property>
                 <style>
-                  <class name="display"/>
+                  <class name="display-emphasized"/>
                 </style>
                 <signal name="output" handler="show_leading_zeros"/>
                 <signal name="changed" handler="spinbuttons_changed"/>
@@ -77,16 +78,22 @@
           <object class="GtkListBox" id="listbox">
             <property name="selection_mode">none</property>
             <child>
-              <object class="NixieAlarmDayPickerRow" id="repeats">
-                <signal name="days_changed" handler="days_changed" swapped="no" />
+              <object class="HeMiniContentBlock">
+                <property name="title" translatable="yes">Repeat</property>
+                <child>
+                  <object class="NixieAlarmDayPickerRow" id="repeats">
+                    <signal name="days_changed" handler="days_changed" swapped="no" />
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="HeMiniContentBlock">
                 <property name="title" translatable="yes">Name</property>
                 <child>
-                  <object class="GtkEntry" id="name_entry">
-                    <signal name="changed" handler="entry_changed" object="NixieAlarmSetupDialog" swapped="no"/>
+                  <object class="HeTextField" id="name_entry">
+                    <property name="margin-top">12</property>
+                    <property name="is-outline">1</property>
                   </object>
                 </child>
               </object>
@@ -108,19 +115,18 @@
         <child>
           <object class="GtkBox">
             <property name="spacing">12</property>
-            <property name="halign">center</property>
             <child>
               <object class="HeButton" id="delete_button">
                 <property name="label" translatable="yes">Remove Alarm</property>
-                <property name="is-pill">1</property>
-                <property name="halign">center</property>
-                <signal name="clicked" handler="delete" swapped="no" />
+                <property name="is-tint">1</property>
+                <property name="custom-color">red</property>
+                <signal name="clicked" handler="on_delete" swapped="no" />
               </object>
             </child>
             <child>
               <object class="HeButton" id="primary_button">
                 <property name="is-pill">1</property>
-                <property name="halign">center</property>
+                <property name="hexpand">1</property>
               </object>
             </child>
           </object>

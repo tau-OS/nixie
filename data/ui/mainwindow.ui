@@ -66,6 +66,18 @@
                             </child>
                             <child>
                               <object class="GtkStackPage">
+                                <property name="name">alarms</property>
+                                <property name="title">Alarms</property>
+                                <property name="icon-name">alarm-symbolic</property>
+                                <property name="child">
+                                  <object class="NixieAlarmFace" id="alarms">
+                                    <property name="win">NixieMainWindow</property>
+                                  </object>
+                                </property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkStackPage">
                                 <property name="name">timer</property>
                                 <property name="title">Timer</property>
                                 <property name="icon-name">timer-symbolic</property>

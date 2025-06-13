@@ -37,3 +37,18 @@
 	background: @accent_bg_color;
 	color: @accent_fg_color;
 }
+
+.numeric {
+	font-feature-settings: "tnum" 1;
+	font-size: 57pt;
+	line-height: 64pt;
+	letter-spacing: -0.25pt;
+}
+
+.display-emphasized {
+	font-feature-settings: "tnum" 1;
+	font-size: 57pt;
+	font-weight: 700;
+	line-height: 64pt;
+	letter-spacing: -0.25pt;
+}

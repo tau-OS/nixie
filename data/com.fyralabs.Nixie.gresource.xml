@@ -6,6 +6,10 @@
     <file alias="mainwindow.ui">ui/mainwindow.ui</file>
     <file alias="worldlocationfinder.ui">ui/worldlocationfinder.ui</file>
 
+    <file alias="alarmface.ui">ui/alarmface.ui</file>
+    <file alias="alarmrow.ui">ui/alarmrow.ui</file>
+    <file alias="alarmsetup.ui">ui/alarmsetup.ui</file>
+
     <file alias="stopwatchface.ui">ui/stopwatchface.ui</file>
     <file alias="stopwatchrow.ui">ui/stopwatchrow.ui</file>
 
@@ -14,6 +18,5 @@
     <file alias="timersetup.ui">ui/timersetup.ui</file>
 
     <file alias="worldface.ui">ui/worldface.ui</file>
-    <file alias="worldrow.ui">ui/worldrow.ui</file>
   </gresource>
 </gresources>

@@ -70,7 +70,6 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
     private int stored_hour;
     private int stored_minute;
     private int stored_second;
-    double stored_milisecond;
     private int current_lap;
 
     [GtkChild]
@@ -80,17 +79,12 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
     [GtkChild]
     private unowned Gtk.Label seconds_label;
     [GtkChild]
-    private unowned Gtk.Label miliseconds_label;
-    [GtkChild]
     private unowned Gtk.Box time_container;
 
     [GtkChild]
     private unowned Gtk.ScrolledWindow laps_sw;
     [GtkChild]
     private unowned Gtk.Revealer laps_revealer;
-
-    [GtkChild]
-    private unowned Gtk.Box container;
 
     [GtkChild]
     private unowned He.OverlayButton start_btn;
@@ -118,14 +112,6 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
             }
             var lap_row = new LapsRow ((Lap) lap, before);
             return lap_row;
-        });
-
-        laps.items_changed.connect (() => {
-            if (laps.get_n_items () == 0) {
-                this.container.valign = CENTER;
-            } else {
-                this.container.valign = FILL;
-            }
         });
 
         map.connect ((w) => {
@@ -300,8 +286,6 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
             Utils.Misc.time_to_hms (timer.elapsed (), out h, out m, out s, out r);
         }
 
-        int ds = (int) (r * 10);
-
         // Note that the format uses unicode RATIO character
         // We also prepend the LTR mark to make sure text is always in this direction
         if (stored_hour != h) {
@@ -315,10 +299,6 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
         if (stored_second != s) {
             seconds_label.label = "%02i".printf (s);
             stored_second = s;
-        }
-        if (stored_milisecond != ds) {
-            miliseconds_label.label = "%i".printf (ds);
-            stored_milisecond = ds;
         }
 
         return true;

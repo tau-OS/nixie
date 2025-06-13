@@ -72,7 +72,7 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
         factory.bind.connect (on_grid_bind);
         factory.unbind.connect (on_grid_unbind);
         clocks_grid.factory = factory;
-        clocks_grid.model = new Gtk.SingleSelection (grid_model);
+        clocks_grid.model = new Gtk.NoSelection (grid_model);
 
         load ();
 

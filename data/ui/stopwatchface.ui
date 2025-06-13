@@ -39,74 +39,78 @@
             <child>
               <object class="GtkBox" id="container">
                 <property name="orientation">vertical</property>
-                <property name="valign">center</property>
                 <property name="vexpand">1</property>
+                <property name="margin_bottom">18</property>
+                <property name="margin-end">18</property>
+                <property name="margin-start">18</property>
                 <child>
                   <object class="GtkBox" id="time_container">
+                    <property name="orientation">vertical</property>
                     <property name="halign">center</property>
                     <property name="margin_bottom">12</property>
                     <property name="margin-end">18</property>
                     <property name="margin-start">18</property>
                     <child>
-                      <object class="GtkLabel" id="hours_label">
-                        <property name="label">00</property>
-                        <style>
-                          <class name="big-display" />
-                          <class name="numeric" />
-                          <class name="dim-label" />
-                        </style>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <child>
+                          <object class="GtkLabel" id="hours_label">
+                            <property name="label">00</property>
+                            <property name="xalign">1</property>
+                            <property name="hexpand">1</property>
+                            <style>
+                              <class name="big-display" />
+                              <class name="dim-label" />
+                              <class name="numeric" />
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="label">∶</property>
-                        <style>
-                          <class name="big-display" />
-                          <class name="dim-label" />
-                        </style>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">∶</property>
+                            <style>
+                              <class name="big-display" />
+                              <class name="numeric" />
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="minutes_label">
+                            <property name="label">00</property>
+                            <style>
+                              <class name="big-display" />
+                              <class name="numeric" />
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="minutes_label">
-                        <property name="label">00</property>
-                        <style>
-                          <class name="big-display" />
-                          <class name="numeric" />
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">∶</property>
-                        <style>
-                          <class name="big-display" />
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="seconds_label">
-                        <property name="label">00</property>
-                        <style>
-                          <class name="big-display" />
-                          <class name="numeric" />
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">.</property>
-                        <style>
-                          <class name="big-display" />
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="miliseconds_label">
-                        <property name="label">0</property>
-                        <style>
-                          <class name="big-display" />
-                          <class name="numeric" />
-                        </style>
+                      <object class="GtkBox">
+                        <property name="orientation">horizontal</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">∶</property>
+                            <style>
+                              <class name="big-display" />
+                              <class name="numeric" />
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="seconds_label">
+                            <property name="label">00</property>
+                            <style>
+                              <class name="big-display" />
+                              <class name="numeric" />
+                            </style>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
