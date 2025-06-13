@@ -14,8 +14,7 @@
           <object class="GtkBox">
             <property name="orientation">vertical</property>
             <child>
-              <object class="HeAppBar">
-                <property name="show-left-title-buttons">0</property>
+              <object class="HeAppBar" id="timer_appbar">
                 <property name="show-right-title-buttons">1</property>
                 <property name="valign">start</property>
                 <child type="titlebar-menu">
@@ -78,16 +77,15 @@
             </child>
             <child>
               <object class="HeButton" id="start_button">
-                <property name="halign">end</property>
+                <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="margin-bottom">18</property>
                 <property name="margin-end">18</property>
-                <property name="width_request">56</property>
+                <property name="width_request">150</property>
                 <property name="height_request">56</property>
-                <property name="icon">media-playback-start-symbolic</property>
+                <property name="label">Start</property>
                 <style>
                   <class name="overlay-button" />
-                  <class name="normal-icon" />
                   <class name="primary" />
                 </style>
               </object>

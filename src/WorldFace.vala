@@ -22,21 +22,36 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     public MainWindow win { get; set; }
 
     private Utils.ContentStore locations;
+    private GLib.ListStore grid_model;
     private GLib.Settings settings;
+    private WorldItem? current_location_item;
 
     [GtkChild]
     private unowned Gtk.Stack stack;
     [GtkChild]
     private unowned He.EmptyPage emptypage;
     [GtkChild]
-    private unowned Gtk.ListBox listbox;
+    private unowned Gtk.GridView clocks_grid;
+    [GtkChild]
+    private unowned Gtk.Box current_location_box;
+    [GtkChild]
+    private unowned Gtk.Label current_time_label;
+    [GtkChild]
+    private unowned Gtk.Label current_date_label;
     [GtkChild]
     public unowned Gtk.MenuButton menu_button;
+    [GtkChild]
+    public unowned Gtk.MenuButton menu_button2;
+    [GtkChild]
+    private unowned He.AppBar empty_appbar;
+    [GtkChild]
+    private unowned He.AppBar clocks_appbar;
 
     construct {
         emptypage.action_button.visible = false;
 
         locations = new Utils.ContentStore ();
+        grid_model = new GLib.ListStore (typeof (WorldItem));
         settings = new GLib.Settings ("com.fyralabs.Nixie");
 
         locations.set_sorting ((item1, item2) => {
@@ -51,11 +66,13 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
             return 0;
         });
 
-        listbox.bind_model (locations, (item) => {
-            var row = new WorldRow ((WorldItem) item);
-            row.remove_clock.connect (() => remove_clock ((WorldItem) item));
-            return row;
-        });
+        // Set up GridView
+        var factory = new Gtk.SignalListItemFactory ();
+        factory.setup.connect (on_grid_setup);
+        factory.bind.connect (on_grid_bind);
+        factory.unbind.connect (on_grid_unbind);
+        clocks_grid.factory = factory;
+        clocks_grid.model = new Gtk.SingleSelection (grid_model);
 
         load ();
 
@@ -66,6 +83,8 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
         }
 
         locations.items_changed.connect ((position, removed, added) => {
+            update_grid_model ();
+            update_current_location_display ();
             save ();
         });
 
@@ -74,11 +93,101 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
             locations.foreach ((l) => {
                 ((WorldItem) l).tick ();
             });
-            // TODO Only need to queue what changed
-            listbox.queue_draw ();
+            update_current_location_display ();
         });
 
+        // Set menu button popover arrow property
         menu_button.get_popover ().has_arrow = false;
+        menu_button2.get_popover ().has_arrow = false;
+
+        // Bind AppBar left title buttons to album folded state
+        realize.connect (() => {
+            setup_appbar_bindings ();
+        });
+
+        update_current_location_display ();
+    }
+
+    private void setup_appbar_bindings () {
+        if (win == null) {
+            return;
+        }
+
+        // Get the album from MainWindow through the overlay
+        var about_overlay = win.about_overlay;
+        if (about_overlay != null && about_overlay.child != null) {
+            var album = about_overlay.child;
+
+            // Connect to the folded property notify signal
+            album.notify["folded"].connect (() => {
+                bool folded;
+                album.get ("folded", out folded);
+                empty_appbar.show_left_title_buttons = folded;
+                clocks_appbar.show_left_title_buttons = folded;
+            });
+
+            // Set initial state
+            bool folded;
+            album.get ("folded", out folded);
+            empty_appbar.show_left_title_buttons = folded;
+            clocks_appbar.show_left_title_buttons = folded;
+        }
+    }
+
+    private void on_grid_setup (Gtk.SignalListItemFactory factory, GLib.Object obj) {
+        var item = obj as Gtk.ListItem;
+        if (item == null)return;
+        var widget = new WorldGridItem ();
+        item.child = widget;
+    }
+
+    private void on_grid_bind (Gtk.SignalListItemFactory factory, GLib.Object obj) {
+        var item = obj as Gtk.ListItem;
+        if (item == null)return;
+        var world_item = (WorldItem) item.item;
+        var widget = (WorldGridItem) item.child;
+        widget.world_item = world_item;
+        widget.current_location = current_location_item;
+        widget.remove_clock.connect (() => remove_clock (world_item));
+    }
+
+    private void on_grid_unbind (Gtk.SignalListItemFactory factory, GLib.Object obj) {
+        var item = obj as Gtk.ListItem;
+        if (item == null)return;
+        var widget = (WorldGridItem) item.child;
+        widget.world_item = null;
+        widget.current_location = null;
+    }
+
+    private void update_grid_model () {
+        grid_model.remove_all ();
+
+        var n = locations.get_n_items ();
+        for (int i = 0; i < n; i++) {
+            var item = (WorldItem) locations.get_object (i);
+            if (!item.automatic) {
+                grid_model.append (item);
+            } else {
+                current_location_item = item;
+            }
+        }
+    }
+
+    private void update_current_location_display () {
+        if (current_location_item != null) {
+            current_time_label.label = current_location_item.time_label;
+            current_date_label.label = format_current_date (current_location_item.date_time);
+            current_location_box.visible = true;
+        } else {
+            var wallclock = Utils.WallClock.get_default ();
+            current_time_label.label = wallclock.format_time (wallclock.date_time);
+            current_date_label.label = format_current_date (wallclock.date_time);
+            current_location_box.visible = true;
+        }
+    }
+
+    private string format_current_date (GLib.DateTime date_time) {
+        return date_time.format ("%a, %b %d");
     }
 
     [GtkCallback]
@@ -89,7 +198,10 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     private void load () {
         locations.deserialize (settings.get_value ("clocks"), WorldItem.deserialize);
 
-        if (locations.get_n_items () != 0) {
+        update_grid_model ();
+        update_current_location_display ();
+
+        if (locations.get_n_items () != 0 || current_location_item != null) {
             stack.set_visible_child_name ("clocks");
         } else {
             stack.set_visible_child_name ("empty");
@@ -170,62 +282,96 @@ public class Nixie.WorldFace : He.Bin, Nixie.Utils.Clock {
     }
 }
 
-[GtkTemplate (ui = "/com/fyralabs/Nixie/worldrow.ui")]
-private class Nixie.WorldRow : He.Bin {
-    public WorldItem location { get; construct set; }
+private class Nixie.WorldGridItem : Gtk.Box {
+    public WorldItem? world_item { get; set; }
+    public WorldItem? current_location { get; set; }
 
-    [GtkChild]
-    private unowned Gtk.Label block_title;
-    [GtkChild]
-    private unowned Gtk.Label block_subtitle;
-    [GtkChild]
-    private unowned Gtk.Widget delete_button;
+    private Gtk.Label time_label;
+    private Gtk.Label name_label;
+    private Gtk.Label offset_label;
+    private He.Button delete_button;
 
     internal signal void remove_clock ();
 
-    public bool automatic { get; set; }
+    construct {
+        orientation = Gtk.Orientation.VERTICAL;
+        spacing = 12;
 
-    public WorldRow (WorldItem location) {
-        Object (location: location);
+        time_label = new Gtk.Label ("");
+        time_label.add_css_class ("display");
+        time_label.xalign = 0;
 
-        location.bind_property ("city-name", block_subtitle, "label", BindingFlags.DEFAULT | BindingFlags.SYNC_CREATE);
-        location.tick.connect (update);
+        name_label = new Gtk.Label ("");
+        name_label.add_css_class ("cb-title");
+        name_label.wrap = true;
+        name_label.justify = Gtk.Justification.CENTER;
+        name_label.xalign = 0;
 
-        update ();
+        offset_label = new Gtk.Label ("");
+        offset_label.add_css_class ("cb-subtitle");
+        offset_label.xalign = 0;
+
+        delete_button = new He.Button ("user-trash-symbolic", "");
+        delete_button.is_disclosure = true;
+        delete_button.halign = Gtk.Align.END;
+        delete_button.valign = Gtk.Align.START;
+        delete_button.clicked.connect (() => remove_clock ());
+
+        var overlay = new Gtk.Overlay ();
+        var content_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 12);
+        content_box.halign = Gtk.Align.START;
+        content_box.append (time_label);
+        content_box.append (name_label);
+        content_box.append (offset_label);
+
+        overlay.child = content_box;
+        overlay.add_overlay (delete_button);
+
+        append (overlay);
+        add_css_class ("mini-content-block");
+
+        notify["world-item"].connect (update);
+        notify["current-location"].connect (update);
     }
 
     private void update () {
+        if (world_item == null) {
+            return;
+        }
+
+        time_label.label = world_item.time_label;
+        name_label.label = world_item.city_name;
+
+        // Calculate offset
+        if (current_location != null) {
+            var offset_seconds = world_item.date_time.get_utc_offset () - current_location.date_time.get_utc_offset ();
+            var offset_hours = offset_seconds / TimeSpan.HOUR;
+
+            string offset_text = "";
+            long offset_hours_long = (long) offset_hours;
+            if (offset_hours_long > 0) {
+                offset_text = "+%ldh".printf (offset_hours_long);
+            } else if (offset_hours_long < 0) {
+                offset_text = "%ldh".printf (offset_hours_long);
+            } else {
+                offset_text = "";
+            }
+
+            // Add day difference if applicable
+            if (world_item.day_label != null && world_item.day_label != "") {
+                offset_text += " " + world_item.day_label;
+            }
+
+            offset_label.label = offset_text;
+        } else {
+            offset_label.label = "";
+        }
+
+        // Apply CSS state classes
         remove_css_class ("night");
         remove_css_class ("civil");
         remove_css_class ("day");
-        add_css_class (location.state_class);
-
-        if (location.automatic) {
-            add_css_class ("automatic");
-        }
-
-        if (location.day_label != null && location.day_label != "") {
-            block_title.label = "%s".printf ((string) location.day_label);
-            delete_button.visible = true;
-            delete_button.remove_css_class ("hidden");
-        } else if (location.automatic) {
-            // Translators: This clock represents the local time
-            block_title.label = _("Current location");
-            delete_button.visible = false;
-            delete_button.add_css_class ("hidden");
-        } else {
-            delete_button.visible = true;
-            delete_button.remove_css_class ("hidden");
-        }
-
-        block_title.label = location.time_label;
-        block_title.add_css_class ("display");
-        block_title.remove_css_class ("cb-title");
-    }
-
-    [GtkCallback]
-    private void delete () {
-        remove_clock ();
+        add_css_class (world_item.state_class);
     }
 }
 
@@ -399,7 +545,7 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
     private string _name;
     private GLib.TimeZone? time_zone;
     private GLib.DateTime local_time;
-    private GLib.DateTime date_time;
+    public GLib.DateTime date_time;
     private GWeather.Info? weather_info;
 
     // When sunrise/sunset happens, at different corrections, in locations
@@ -579,7 +725,7 @@ public class Nixie.WorldItem : Object, Nixie.Utils.ContentItem {
         if (location == null) {
             return null;
         } else if (((GWeather.Location) location).get_timezone_str () == null) {
-            warning ("Invalid location “%s” – timezone unknown. Ignoring.",
+            warning ("Invalid location \" %s \" – timezone unknown. Ignoring.",
                      ((GWeather.Location) location).get_name ());
             return null;
         } else {

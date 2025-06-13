@@ -99,6 +99,8 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
 
     [GtkChild]
     public unowned Gtk.MenuButton menu_button;
+    [GtkChild]
+    public unowned He.AppBar sw_appbar;
 
     construct {
         laps = new GLib.ListStore (typeof (Lap));
@@ -147,6 +149,36 @@ public class Nixie.StopwatchFace : Gtk.Box, Nixie.Utils.Clock {
         });
 
         menu_button.get_popover ().has_arrow = false;
+
+        // Bind AppBar left title buttons to album folded state
+        realize.connect (() => {
+            setup_appbar_bindings ();
+        });
+    }
+
+    private void setup_appbar_bindings () {
+        var win = (MainWindow) this.get_root ();
+        if (win == null) {
+            return;
+        }
+
+        // Get the album from MainWindow through the overlay
+        var about_overlay = win.about_overlay;
+        if (about_overlay != null && about_overlay.child != null) {
+            var album = about_overlay.child;
+
+            // Connect to the folded property notify signal
+            album.notify["folded"].connect (() => {
+                bool folded;
+                album.get ("folded", out folded);
+                sw_appbar.show_left_title_buttons = folded;
+            });
+
+            // Set initial state
+            bool folded;
+            album.get ("folded", out folded);
+            sw_appbar.show_left_title_buttons = folded;
+        }
     }
 
     private void on_start_btn_clicked (He.OverlayButton button) {

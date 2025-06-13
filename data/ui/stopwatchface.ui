@@ -12,8 +12,7 @@
       <object class="GtkBox">
         <property name="orientation">vertical</property>
         <child>
-          <object class="HeAppBar">
-            <property name="show-left-title-buttons">0</property>
+          <object class="HeAppBar" id="sw_appbar">
             <property name="show-right-title-buttons">1</property>
             <property name="valign">start</property>
             <child type="titlebar-menu">

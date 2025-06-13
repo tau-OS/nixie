@@ -1,29 +1,25 @@
 /* Etc */
 .automatic {
-	background: mix(@accent_bg_color, @view_bg_color, 0.90);
-	color: @view_fg_color;
+	background: mix(@accent_bg_color, @surface_container_bg_color, 0.90);
+	color: @surface_fg_color;
 }
 
 .day {
-	background: mix(@electron_yellow, @view_bg_color, 0.90);
-	color: @view_fg_color;
+	background: mix(@electron_yellow, @surface_container_bg_color, 0.90);
+	color: @surface_fg_color;
 }
 
 .night {
-	background: mix(@photon_indigo, @view_bg_color, 0.90);
-	color: @view_fg_color;
-}
-
-.normal-icon {
-	-gtk-icon-size: 24px;
+	background: mix(@photon_indigo, @surface_container_bg_color, 0.90);
+	color: @surface_fg_color;
 }
 
 .time-spinbutton .up {
-	color: @view_fg_color;
+	color: @surface_fg_color;
 	border-radius: 12px 12px 0 0;
 }
 .time-spinbutton .up:hover {
-	background: mix(@accent_bg_color, @view_bg_color, 0.95);
+	background: mix(@accent_bg_color, @surface_container_bg_color, 0.95);
 }
 .time-spinbutton .up:active {
 	background: @accent_bg_color;
@@ -31,11 +27,11 @@
 }
 
 .time-spinbutton .down {
-	color: @view_fg_color;
+	color: @surface_fg_color;
 	border-radius: 0 0 12px 12px;
 }
 .time-spinbutton .down:hover {
-	background: mix(@accent_bg_color, @view_bg_color, 0.95);
+	background: mix(@accent_bg_color, @surface_container_bg_color, 0.95);
 }
 .time-spinbutton .down:active {
 	background: @accent_bg_color;

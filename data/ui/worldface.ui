@@ -19,15 +19,13 @@
                 <property name="vexpand">true</property>
                 <property name="hexpand">true</property>
                 <property name="icon">list-add-symbolic</property>
-                <property name="alignment">center</property>
-                <property name="typeb">primary</property>
+                <property name="typeb">tertiary</property>
                 <signal name="clicked" handler="on_new" swapped="no" />
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="HeAppBar">
-                        <property name="show-left-title-buttons">0</property>
+                      <object class="HeAppBar" id="empty_appbar">
                         <property name="show-right-title-buttons">1</property>
                         <property name="valign">start</property>
                         <child type="titlebar-menu">
@@ -65,16 +63,15 @@
                 <property name="vexpand">true</property>
                 <property name="hexpand">true</property>
                 <property name="icon">list-add-symbolic</property>
-                <property name="alignment">center</property>
-                <property name="typeb">primary</property>
+                <property name="typeb">tertiary</property>
                 <signal name="clicked" handler="on_new" swapped="no" />
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="main_box">
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="HeAppBar">
+                      <object class="HeAppBar" id="clocks_appbar">
                         <property name="show-left-title-buttons">0</property>
-                        <property name="show-right-title-buttons">0</property>
+                        <property name="show-right-title-buttons">1</property>
                         <property name="valign">start</property>
                         <child type="titlebar-menu">
                           <object class="GtkMenuButton" id="menu_button2">
@@ -90,18 +87,47 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkScrolledWindow" id="list_view">
-                        <property name="vexpand">1</property>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="margin-start">18</property>
+                        <property name="margin-end">18</property>
+                        <property name="spacing">24</property>
                         <child>
-                          <object class="GtkListBox" id="listbox">
-                            <property name="valign">start</property>
-                            <property name="hexpand">1</property>
-                            <property name="selection-mode">none</property>
-                            <property name="margin-start">18</property>
-                            <property name="margin-end">18</property>
-                            <style>
-                              <class name="content-list" />
-                            </style>
+                          <object class="GtkBox" id="current_location_box">
+                            <property name="orientation">vertical</property>
+                            <property name="halign">center</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkLabel" id="current_time_label">
+                                <property name="label">12:00</property>
+                                <style>
+                                  <class name="big-display" />
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="current_date_label">
+                                <property name="label">Thu, Jun 12</property>
+                                <style>
+                                  <class name="view-subtitle" />
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <property name="vexpand">1</property>
+                            <property name="hscrollbar-policy">never</property>
+                            <child>
+                              <object class="GtkGridView" id="clocks_grid">
+                                <property name="min-columns">1</property>
+                                <property name="max-columns">2</property>
+                                <style>
+                                  <class name="content-grid" />
+                                </style>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>

@@ -155,9 +155,9 @@ public class Nixie.TimerRow : He.Bin {
             _item = value;
 
             title.text = (string) _item.name;
-            title.bind_property ("text", _item, "name");
+            title.get_internal_entry ().bind_property ("text", _item, "name");
             timer_name.label = (string) _item.name;
-            title.bind_property ("text", timer_name, "label");
+            title.get_internal_entry ().bind_property ("text", timer_name, "label");
 
             _item.notify["name"].connect (() => edited ());
         }
@@ -185,7 +185,7 @@ public class Nixie.TimerRow : He.Bin {
     [GtkChild]
     private unowned Gtk.Button delete_button;
     [GtkChild]
-    private unowned Gtk.Entry title;
+    private unowned He.TextField title;
 
     public signal void deleted ();
     public signal void edited ();
@@ -193,6 +193,8 @@ public class Nixie.TimerRow : He.Bin {
     public TimerRow (Nixie.TimerItem item) {
         Object (item: item);
         countdown_label.set_direction (Gtk.TextDirection.LTR);
+
+        title.get_internal_entry ().width_chars = 26;
 
         item.countdown_updated.connect (this.update_countdown);
         item.ring.connect (() => this.ring ());
@@ -276,6 +278,8 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     private unowned Gtk.Stack stack;
     [GtkChild]
     public unowned Gtk.MenuButton menu_button;
+    [GtkChild]
+    private unowned He.AppBar timer_appbar;
 
     public bool is_running { get; set; default = false; }
 
@@ -332,6 +336,36 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
         load ();
 
         menu_button.get_popover ().has_arrow = false;
+
+        // Bind AppBar left title buttons to album folded state
+        realize.connect (() => {
+            setup_appbar_bindings ();
+        });
+    }
+
+    private void setup_appbar_bindings () {
+        var win = (MainWindow) this.get_root ();
+        if (win == null) {
+            return;
+        }
+
+        // Get the album from MainWindow through the overlay
+        var about_overlay = win.about_overlay;
+        if (about_overlay != null && about_overlay.child != null) {
+            var album = about_overlay.child;
+
+            // Connect to the folded property notify signal
+            album.notify["folded"].connect (() => {
+                bool folded;
+                album.get ("folded", out folded);
+                timer_appbar.show_left_title_buttons = folded;
+            });
+
+            // Set initial state
+            bool folded;
+            album.get ("folded", out folded);
+            timer_appbar.show_left_title_buttons = folded;
+        }
     }
 
     private int get_total_active_timers () {

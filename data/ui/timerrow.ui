@@ -2,7 +2,7 @@
 <interface>
   <template class="NixieTimerRow" parent="HeBin">
     <style>
-      <class name="mini-content-block"/>
+      <class name="mini-content-block" />
     </style>
     <child>
       <object class="GtkBox">
@@ -12,10 +12,10 @@
         <property name="hexpand">1</property>
         <child>
           <object class="GtkLabel" id="countdown_label">
-            <property name="label">00 ∶ 00 ∶ 00</property>
+            <property name="label">00 ∶ 00 ∶ 00</property>
             <style>
-              <class name="numeric"/>
-              <class name="big-display"/>
+              <class name="numeric" />
+              <class name="big-display" />
             </style>
           </object>
         </child>
@@ -27,9 +27,8 @@
                   <object class="GtkStackPage">
                     <property name="name">edit</property>
                     <property name="child">
-                      <object class="GtkEntry" id="title">
+                      <object class="HeTextField" id="title">
                         <property name="halign">center</property>
-                        <property name="width_chars">26</property>
                         <property name="placeholder_text" translatable="yes">Title…</property>
                       </object>
                     </property>
@@ -43,8 +42,8 @@
                         <property name="halign">center</property>
                         <property name="valign">start</property>
                         <style>
-                          <class name="cb-subtitle"/>
-                          <class name="dim-label"/>
+                          <class name="cb-subtitle" />
+                          <class name="dim-label" />
                         </style>
                       </object>
                     </property>
@@ -69,11 +68,10 @@
                     <property name="name">pause</property>
                     <property name="child">
                       <object class="HeButton" id="pause_button">
-                        <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="is-pill">1</property>
                         <property name="label" translatable="yes">Pause</property>
-                        <signal name="clicked" handler="on_pause_button_clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_pause_button_clicked" swapped="no" />
                       </object>
                     </property>
                   </object>
@@ -83,11 +81,10 @@
                     <property name="name">start</property>
                     <property name="child">
                       <object class="HeButton" id="start_button">
-                        <property name="halign">center</property>
                         <property name="is-pill">1</property>
                         <property name="valign">center</property>
                         <property name="label" translatable="yes">Start</property>
-                        <signal name="clicked" handler="on_start_button_clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_start_button_clicked" swapped="no" />
                       </object>
                     </property>
                   </object>
@@ -105,11 +102,10 @@
                     <property name="name">button</property>
                     <property name="child">
                       <object class="HeButton" id="reset_button">
-                        <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="is-pill">1</property>
                         <property name="label" translatable="yes">Reset</property>
-                        <signal name="clicked" handler="on_reset_button_clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_reset_button_clicked" swapped="no" />
                       </object>
                     </property>
                   </object>
@@ -118,7 +114,7 @@
                   <object class="GtkStackPage">
                     <property name="name">empty</property>
                     <property name="child">
-                      <object class="HeBin"/>
+                      <object class="HeBin" />
                     </property>
                   </object>
                 </child>
@@ -135,7 +131,6 @@
                     <property name="name">button</property>
                     <property name="child">
                       <object class="HeButton" id="delete_button">
-                        <property name="halign">center</property>
                         <property name="valign">center</property>
                         <property name="is-pill">1</property>
                         <property name="label" translatable="yes">Delete</property>
@@ -147,7 +142,7 @@
                   <object class="GtkStackPage">
                     <property name="name">empty</property>
                     <property name="child">
-                      <object class="HeBin"/>
+                      <object class="HeBin" />
                     </property>
                   </object>
                 </child>
