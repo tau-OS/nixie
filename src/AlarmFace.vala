@@ -113,9 +113,14 @@ public class Nixie.AlarmFace : He.Bin {
     }
 
     private void update_view () {
-        if (alarms.get_n_items () == 0) {
+        var item_count = alarms.get_n_items ();
+        message ("Updating view, alarm count: %u", item_count);
+
+        if (item_count == 0) {
+            message ("Switching to empty view");
             stack.set_visible_child_name ("empty");
         } else {
+            message ("Switching to alarms view");
             stack.set_visible_child_name ("alarms");
         }
     }
@@ -149,7 +154,9 @@ public class Nixie.AlarmFace : He.Bin {
     }
 
     private void add_alarm_item (AlarmItem item) {
+        message ("Adding alarm item: %02d:%02d %s", item.hour, item.minute, item.name);
         alarms.add (item);
+        message ("Alarm added, total items: %u", alarms.get_n_items ());
         save ();
     }
 
@@ -167,8 +174,10 @@ public class Nixie.AlarmFace : He.Bin {
     }
 
     public void activate_new () {
+        message ("Creating new alarm dialog");
         var dialog = new AlarmSetupDialog ((Gtk.Window) get_root (), null);
         dialog.alarm_saved.connect ((new_item) => {
+            message ("Received alarm_saved signal");
             add_alarm_item (new_item);
         });
         dialog.alarm_deleted.connect ((deleted_item) => {

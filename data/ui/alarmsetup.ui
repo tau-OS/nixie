@@ -25,14 +25,14 @@
                 <property name="text">0</property>
                 <property name="xalign">0.5</property>
                 <property name="orientation">vertical</property>
-                <property name="numeric">True</property>
-                <property name="wrap">True</property>
+                <property name="numeric">true</property>
+                <property name="wrap">true</property>
                 <property name="width-request">60</property>
                 <style>
                   <class name="display-emphasized"/>
                 </style>
-                <signal name="changed" handler="spinbuttons_changed" object="NixieAlarmSetupDialog" swapped="no"/>
-                <signal name="output" handler="show_leading_zeros"/>
+                <signal name="changed" handler="spinbuttons_changed" swapped="no"/>
+                <signal name="output" handler="show_leading_zeros" swapped="no"/>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="upper">23</property>
@@ -55,14 +55,14 @@
                 <property name="text">0</property>
                 <property name="xalign">0.5</property>
                 <property name="orientation">vertical</property>
-                <property name="numeric">True</property>
-                <property name="wrap">True</property>
+                <property name="numeric">true</property>
+                <property name="wrap">true</property>
                 <property name="width-request">60</property>
                 <style>
                   <class name="display-emphasized"/>
                 </style>
-                <signal name="output" handler="show_leading_zeros"/>
-                <signal name="changed" handler="spinbuttons_changed"/>
+                <signal name="output" handler="show_leading_zeros" swapped="no"/>
+                <signal name="changed" handler="spinbuttons_changed" swapped="no"/>
                 <property name="adjustment">
                   <object class="GtkAdjustment">
                     <property name="upper">59</property>
@@ -120,13 +120,15 @@
                 <property name="label" translatable="yes">Remove Alarm</property>
                 <property name="is-tint">1</property>
                 <property name="custom-color">red</property>
-                <signal name="clicked" handler="on_delete" swapped="no" />
+                <signal name="clicked" handler="on_delete" swapped="no"/>
               </object>
             </child>
             <child>
               <object class="HeButton" id="primary_button">
                 <property name="is-pill">1</property>
                 <property name="hexpand">1</property>
+                <property name="sensitive">1</property>
+                <signal name="clicked" handler="on_save" swapped="no"/>
               </object>
             </child>
           </object>

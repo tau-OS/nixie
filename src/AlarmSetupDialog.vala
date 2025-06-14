@@ -1,21 +1,3 @@
-/*
- * Copyright (c) 2022 Fyra Labs
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
 [GtkTemplate (ui = "/com/fyralabs/Nixie/alarmsetup.ui")]
 public class Nixie.AlarmSetupDialog : He.Window {
     private AlarmItem? alarm_item;
@@ -42,18 +24,20 @@ public class Nixie.AlarmSetupDialog : He.Window {
     public AlarmSetupDialog (Gtk.Window parent, AlarmItem? item) {
         Object (transient_for : parent, modal : true);
 
+        message ("Creating AlarmSetupDialog");
+
         alarm_item = item;
         is_editing = (item != null);
 
         setup_ui ();
         load_alarm_data ();
+
+        message ("AlarmSetupDialog created and initialized");
     }
 
     construct {
-        primary_button.clicked.connect (on_save);
-        delete_button.clicked.connect (on_delete);
-
         name_entry.get_internal_entry ().changed.connect (entry_changed);
+        repeats.days_changed.connect (days_changed);
     }
 
     private void setup_ui () {
@@ -66,22 +50,31 @@ public class Nixie.AlarmSetupDialog : He.Window {
             primary_button.label = _("Add");
             delete_button.visible = false;
         }
+
+        message ("Dialog setup - Title: %s, Button: %s", title, primary_button.label);
     }
 
     private void load_alarm_data () {
         if (is_editing && alarm_item != null) {
             h_spinbutton.value = alarm_item.hour;
             m_spinbutton.value = alarm_item.minute;
-            name_entry.text = alarm_item.name;
+            var alarm_name = alarm_item.name ?? _("Alarm");
+            name_entry.text = alarm_name;
             repeats.weekdays = alarm_item.weekdays;
+            message ("Loaded alarm data: %02d:%02d '%s'", alarm_item.hour, alarm_item.minute, alarm_name);
         } else {
             // Set default values for new alarm
             var now = new GLib.DateTime.now_local ();
             h_spinbutton.value = now.get_hour ();
             m_spinbutton.value = now.get_minute ();
             name_entry.placeholder_text = _("Alarm");
+            name_entry.text = ""; // Set empty text instead of just placeholder
             repeats.weekdays = new Utils.Weekdays ();
+            message ("Set default alarm data: %02d:%02d, placeholder: '%s'", now.get_hour (), now.get_minute (), name_entry.placeholder_text);
         }
+
+        // Ensure button is enabled initially
+        validate_input ();
     }
 
     [GtkCallback]
@@ -96,6 +89,8 @@ public class Nixie.AlarmSetupDialog : He.Window {
     }
 
     private void entry_changed () {
+        var current_text = name_entry.text;
+        message ("Entry changed - text: '%s'", current_text ?? "(null)");
         validate_input ();
     }
 
@@ -109,13 +104,35 @@ public class Nixie.AlarmSetupDialog : He.Window {
         primary_button.sensitive = true;
         label_revealer.reveal_child = false;
 
+        message ("Button sensitivity set to: %s", primary_button.sensitive ? "true" : "false");
+
         // Could add duplicate checking here if needed
     }
 
+    [GtkCallback]
     private void on_save () {
+        message ("Save button clicked");
+
         int hour = (int) h_spinbutton.value;
         int minute = (int) m_spinbutton.value;
-        string name = name_entry.text.strip ();
+
+        // Handle null text from He.TextField - try both methods
+        string? raw_name = name_entry.text;
+        string? raw_name2 = name_entry.get_internal_entry ().text;
+
+        message ("name_entry.text: '%s'", raw_name ?? "(null)");
+        message ("name_entry.get_internal_entry().text: '%s'", raw_name2 ?? "(null)");
+
+        string name = "";
+
+        // Use the internal entry text if the direct text is null
+        if (raw_name2 != null) {
+            name = raw_name2.strip ();
+        } else if (raw_name != null) {
+            name = raw_name.strip ();
+        }
+
+        message ("Hour: %d, Minute: %d, Name: '%s'", hour, minute, name);
 
         if (name == "") {
             name = _("Alarm");
@@ -132,10 +149,17 @@ public class Nixie.AlarmSetupDialog : He.Window {
         } else {
             // Create new item
             item = new AlarmItem (hour, minute, name);
-            item.weekdays = repeats.weekdays;
+            if (item != null) {
+                item.weekdays = repeats.weekdays;
+            }
         }
 
-        alarm_saved (item);
+        if (item != null) {
+            message ("About to emit alarm_saved signal");
+            alarm_saved (item);
+        } else {
+            warning ("Failed to create alarm item");
+        }
         destroy ();
     }
 
