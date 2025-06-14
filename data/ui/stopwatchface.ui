@@ -34,7 +34,7 @@
             <property name="hexpand">true</property>
             <property name="icon">media-playback-start-symbolic</property>
             <property name="label" translatable="yes">Start</property>
-            <property name="typeb">primary</property>
+            <property name="typeb">tertiary</property>
             <property name="sensitive">1</property>
             <child>
               <object class="GtkBox" id="container">

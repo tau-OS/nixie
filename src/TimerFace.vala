@@ -261,25 +261,44 @@ public class Nixie.TimerRow : He.Bin {
     }
 
     private void update_countdown (int h, int m, int s) {
-        countdown_label.set_text ("%02i ∶ %02i ∶ %02i".printf (h, m, s));
+        countdown_label.set_text ("%02i ∶ %02i ∶ %02i".printf (h, m, s));
     }
 }
 
 [GtkTemplate (ui = "/com/fyralabs/Nixie/timerface.ui")]
 public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
-    private TimerSetup timer_setup;
+    public MainWindow win { get; set; }
+
     [GtkChild]
     private unowned Gtk.ListBox timers_list;
     [GtkChild]
-    private unowned Gtk.Box no_timer_container;
-    [GtkChild]
-    private unowned Gtk.Button start_button;
+    private unowned He.Button start_button;
     [GtkChild]
     private unowned Gtk.Stack stack;
+    [GtkChild]
+    private unowned Gtk.Box main_box;
     [GtkChild]
     public unowned Gtk.MenuButton menu_button;
     [GtkChild]
     private unowned He.AppBar timer_appbar;
+
+    // Timer setup widgets
+    [GtkChild]
+    private unowned Gtk.SpinButton hours_spin;
+    [GtkChild]
+    private unowned Gtk.SpinButton minutes_spin;
+    [GtkChild]
+    private unowned Gtk.SpinButton seconds_spin;
+    [GtkChild]
+    private unowned He.TextField timer_name_entry;
+    [GtkChild]
+    private unowned He.Button preset_5min;
+    [GtkChild]
+    private unowned He.Button preset_10min;
+    [GtkChild]
+    private unowned He.Button preset_30min;
+    [GtkChild]
+    private unowned He.Button preset_45min;
 
     public bool is_running { get; set; default = false; }
 
@@ -289,8 +308,6 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     private GLib.Notification notification;
 
     construct {
-        timer_setup = new TimerSetup ();
-
         settings = new GLib.Settings ("com.fyralabs.Nixie");
         timers = new Utils.ContentStore ();
 
@@ -309,7 +326,7 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
             if (this.timers.get_n_items () > 0) {
                 stack.visible_child_name = "timers";
             } else {
-                stack.visible_child_name = "empty";
+                stack.visible_child_name = "setup";
             }
             save ();
         });
@@ -319,32 +336,19 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
         notification.set_body (_("Timer countdown finished"));
         notification.set_priority (HIGH);
 
-        var no_timer_container_first_child = no_timer_container.get_first_child ();
-        no_timer_container.insert_child_after (timer_setup, no_timer_container_first_child);
-        stack.set_visible_child_name ("empty");
-
+        stack.set_visible_child_name ("setup");
         start_button.set_sensitive (false);
-        timer_setup.duration_changed.connect ((duration) => {
-            start_button.set_sensitive (duration != 0);
-        });
-        start_button.clicked.connect (() => {
-            var timer = this.timer_setup.get_timer ();
-            this.timers.add (timer);
 
-            timer.start ();
-        });
         load ();
-
         menu_button.get_popover ().has_arrow = false;
 
-        // Bind AppBar left title buttons to album folded state
+        // Setup AppBar bindings after widget is realized
         realize.connect (() => {
             setup_appbar_bindings ();
         });
     }
 
     private void setup_appbar_bindings () {
-        var win = (MainWindow) this.get_root ();
         if (win == null) {
             return;
         }
@@ -368,6 +372,63 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
         }
     }
 
+    [GtkCallback]
+    private void on_duration_changed () {
+        int total_seconds = get_current_duration ();
+        start_button.set_sensitive (total_seconds > 0);
+    }
+
+    [GtkCallback]
+    private void on_preset_clicked (Gtk.Button button) {
+        if (button == preset_5min) {
+            set_timer_duration (0, 5, 0);
+        } else if (button == preset_10min) {
+            set_timer_duration (0, 10, 0);
+        } else if (button == preset_30min) {
+            set_timer_duration (0, 30, 0);
+        } else if (button == preset_45min) {
+            set_timer_duration (0, 45, 0);
+        }
+    }
+
+    [GtkCallback]
+    private void on_start_timer () {
+        int hours = (int) hours_spin.value;
+        int minutes = (int) minutes_spin.value;
+        int seconds = (int) seconds_spin.value;
+        string name = timer_name_entry.get_internal_entry ().text.strip ();
+
+        if (name == "") {
+            name = _("Timer");
+        }
+
+        var timer = new TimerItem (hours, minutes, seconds, name);
+        timers.add (timer);
+        timer.start ();
+
+        // Reset the setup form
+        reset_timer_setup ();
+    }
+
+    private void set_timer_duration (int hours, int minutes, int seconds) {
+        hours_spin.value = hours;
+        minutes_spin.value = minutes;
+        seconds_spin.value = seconds;
+        on_duration_changed ();
+    }
+
+    private int get_current_duration () {
+        return (int) hours_spin.value * 3600 + (int) minutes_spin.value * 60 + (int) seconds_spin.value;
+    }
+
+    private void reset_timer_setup () {
+        hours_spin.value = 0;
+        minutes_spin.value = 0;
+        seconds_spin.value = 0;
+        timer_name_entry.text = "";
+        start_button.set_sensitive (false);
+    }
+
     private int get_total_active_timers () {
         var total_items = 0;
         this.timers.foreach ((timer) => {
@@ -383,11 +444,20 @@ public class Nixie.TimerFace : He.Bin, Nixie.Utils.Clock {
     }
 
     private void load () {
-        timers.deserialize (settings.get_value ("timers"), TimerItem.deserialize);
+        try {
+            timers.deserialize (settings.get_value ("timers"), TimerItem.deserialize);
+        } catch (Error e) {
+            warning ("Failed to load timers: %s", e.message);
+            settings.reset ("timers");
+        }
     }
 
     private void save () {
-        settings.set_value ("timers", timers.serialize ());
+        try {
+            settings.set_value ("timers", timers.serialize ());
+        } catch (Error e) {
+            warning ("Failed to save timers: %s", e.message);
+        }
     }
 
     public virtual signal void ring () {
